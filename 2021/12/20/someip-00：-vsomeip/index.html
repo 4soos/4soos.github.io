@@ -20,30 +20,38 @@
     var CONFIG = {"hostname":"4soos.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="C&#x2F;CPP, Linux, Notes">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Young&#39;s Blog">
-<meta property="og:url" content="https://4soos.github.io/page/2/index.html">
+  <meta name="description" content="vSOMEIP 00 :  quick review refrence: https:&#x2F;&#x2F;blog.zeerd.com&#x2F;vsomeip-1st&#x2F;  Introductionvsomeip 是GENIVI项目中的一个SOME&#x2F;IP开源实现，基于Mozilla Public Liense v2.0协议开源，由BMW贡献。 vsomeip提供了两个动态库：  SOME&#x2F;IP协议的实现库libvsomei">
+<meta property="og:type" content="article">
+<meta property="og:title" content="someip 00： vsomeip">
+<meta property="og:url" content="https://4soos.github.io/2021/12/20/someip-00%EF%BC%9A-vsomeip/index.html">
 <meta property="og:site_name" content="Young&#39;s Blog">
-<meta property="og:description" content="C&#x2F;CPP, Linux, Notes">
+<meta property="og:description" content="vSOMEIP 00 :  quick review refrence: https:&#x2F;&#x2F;blog.zeerd.com&#x2F;vsomeip-1st&#x2F;  Introductionvsomeip 是GENIVI项目中的一个SOME&#x2F;IP开源实现，基于Mozilla Public Liense v2.0协议开源，由BMW贡献。 vsomeip提供了两个动态库：  SOME&#x2F;IP协议的实现库libvsomei">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://4soos.github.io/2021/12/20/imgs/vsomeip_source_routing_init.png">
+<meta property="og:image" content="https://4soos.github.io/2021/12/20/imgs/vsomeip_source_routing_start.png">
+<meta property="og:image" content="https://4soos.github.io/2021/12/20/imgs/vsomeip_source_daemon.png">
+<meta property="article:published_time" content="2021-12-20T09:58:18.000Z">
+<meta property="article:modified_time" content="2021-12-26T10:04:57.466Z">
 <meta property="article:author" content="Young">
+<meta property="article:tag" content="someip">
+<meta property="article:tag" content="vSOMEIP">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://4soos.github.io/2021/12/20/imgs/vsomeip_source_routing_init.png">
 
-<link rel="canonical" href="https://4soos.github.io/page/2/">
+<link rel="canonical" href="https://4soos.github.io/2021/12/20/someip-00%EF%BC%9A-vsomeip/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Young's Blog</title>
+  <title>someip 00： vsomeip | Young's Blog</title>
   
 
 
@@ -150,9 +158,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
@@ -168,10 +177,9 @@
       <meta itemprop="name" content="Young's Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/20/someip-00%EF%BC%9A-vsomeip/" class="post-title-link" itemprop="url">someip 00： vsomeip</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          someip 00： vsomeip
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -201,7 +209,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="vSOMEIP-00-quick-review"><a href="#vSOMEIP-00-quick-review" class="headerlink" title="vSOMEIP 00 :  quick review"></a>vSOMEIP 00 :  quick review</h1><ul>
+        <h1 id="vSOMEIP-00-quick-review"><a href="#vSOMEIP-00-quick-review" class="headerlink" title="vSOMEIP 00 :  quick review"></a>vSOMEIP 00 :  quick review</h1><ul>
 <li>refrence: <a target="_blank" rel="noopener" href="https://blog.zeerd.com/vsomeip-1st/">https://blog.zeerd.com/vsomeip-1st/</a></li>
 </ul>
 <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>vsomeip 是GENIVI项目中的一个SOME/IP开源实现，基于Mozilla Public Liense v2.0协议开源，由BMW贡献。</p>
@@ -273,25 +281,38 @@
 <p>Application创建了一个routing_manager_impl的实例。<br>如果这不是Daemon，而是一个通常的Application，那么他会转而创建routing_manager_proxy的实例，并与找到的Routing Manager建立连接。</p>
 <h2 id="Tools-amp-Examples"><a href="#Tools-amp-Examples" class="headerlink" title="Tools &amp; Examples"></a>Tools &amp; Examples</h2><p>一些简易的Application。用于进行一些消息发送接收的测试工作。</p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          <div class="post-tags">
+              <a href="/tags/someip/" rel="tag"># someip</a>
+              <a href="/tags/vSOMEIP/" rel="tag"># vSOMEIP</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/12/16/manjaro-swap/" rel="prev" title="manjaro_swap">
+      <i class="fa fa-chevron-left"></i> manjaro_swap
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/26/service-discovery/" rel="next" title="service-discovery">
+      service-discovery <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
       </footer>
+    
   </article>
   
   
   
-
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
 
 
 
@@ -343,6 +364,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vSOMEIP-00-quick-review"><span class="nav-number">1.</span> <span class="nav-text">vSOMEIP 00 :  quick review</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-Block"><span class="nav-number">1.2.</span> <span class="nav-text">Code Block</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Interface"><span class="nav-number">1.2.1.</span> <span class="nav-text">Interface</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Runtime"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">Runtime</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Application"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">Application</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Plugin"><span class="nav-number">1.2.1.2.1.</span> <span class="nav-text">Plugin</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Message"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">Message</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Payload"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">Payload</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementation"><span class="nav-number">1.3.</span> <span class="nav-text">Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Endpoints"><span class="nav-number">1.3.1.</span> <span class="nav-text">Endpoints</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Service-Discovery"><span class="nav-number">1.3.2.</span> <span class="nav-text">Service Discovery</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#init"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">init</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#start"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">start</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Routing"><span class="nav-number">1.3.3.</span> <span class="nav-text">Routing</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Init"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">Init</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Start"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">Start</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Daemon"><span class="nav-number">1.4.</span> <span class="nav-text">Daemon</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tools-amp-Examples"><span class="nav-number">1.5.</span> <span class="nav-text">Tools &amp; Examples</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
