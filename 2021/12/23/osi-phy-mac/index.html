@@ -20,20 +20,24 @@
     var CONFIG = {"hostname":"4soos.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="起因： 编译AOSP源码， 提示最小内存为 16gb  本机环境： 123456789101112131415161718████████  ████████  ████████     young@dev████████  ████████  ████████     young@dev████████  ████████  ████████     Uptime: 3h 52m">
+  <meta name="description" content="BLock PHY &amp; MAC从上到下：| | || – | – || I&#x2F;F  |比如PCI总线。负责将IP数据包（或其他协议）传递给MAC层。  || MAC  |包含MAC子层和LLC子层。|| MII&#x2F;SMI |    Media Independed Interfade，介质独立界面。连接MAC和PHY。MAC对PHY的工作状态的确定和对PHY的控制则是使用SMI（Serial">
 <meta property="og:type" content="article">
-<meta property="og:title" content="manjaro_swap">
-<meta property="og:url" content="https://4soos.github.io/2021/12/16/manjaro-swap/index.html">
+<meta property="og:title" content="osi: phy&amp;mac">
+<meta property="og:url" content="https://4soos.github.io/2021/12/23/osi-phy-mac/index.html">
 <meta property="og:site_name" content="Young&#39;s Blog">
-<meta property="og:description" content="起因： 编译AOSP源码， 提示最小内存为 16gb  本机环境： 123456789101112131415161718████████  ████████  ████████     young@dev████████  ████████  ████████     young@dev████████  ████████  ████████     Uptime: 3h 52m">
+<meta property="og:description" content="BLock PHY &amp; MAC从上到下：| | || – | – || I&#x2F;F  |比如PCI总线。负责将IP数据包（或其他协议）传递给MAC层。  || MAC  |包含MAC子层和LLC子层。|| MII&#x2F;SMI |    Media Independed Interfade，介质独立界面。连接MAC和PHY。MAC对PHY的工作状态的确定和对PHY的控制则是使用SMI（Serial">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-12-16T09:04:07.000Z">
-<meta property="article:modified_time" content="2021-12-26T09:31:08.279Z">
+<meta property="og:image" content="https://blog.zeerd.com/public/2021/01/19/ieee802.3.96.1.svg">
+<meta property="article:published_time" content="2021-12-23T10:10:54.000Z">
+<meta property="article:modified_time" content="2021-12-26T10:11:44.654Z">
 <meta property="article:author" content="Young">
-<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="osi">
+<meta property="article:tag" content="phy">
+<meta property="article:tag" content="mac">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.zeerd.com/public/2021/01/19/ieee802.3.96.1.svg">
 
-<link rel="canonical" href="https://4soos.github.io/2021/12/16/manjaro-swap/">
+<link rel="canonical" href="https://4soos.github.io/2021/12/23/osi-phy-mac/">
 
 
 <script id="page-configurations">
@@ -46,7 +50,7 @@
   };
 </script>
 
-  <title>manjaro_swap | Young's Blog</title>
+  <title>osi: phy&mac | Young's Blog</title>
   
 
 
@@ -160,7 +164,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://4soos.github.io/2021/12/16/manjaro-swap/">
+    <link itemprop="mainEntityOfPage" href="https://4soos.github.io/2021/12/23/osi-phy-mac/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -173,7 +177,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          manjaro_swap
+          osi: phy&mac
         </h1>
 
         <div class="post-meta">
@@ -183,24 +187,15 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-12-16 17:04:07" itemprop="dateCreated datePublished" datetime="2021-12-16T17:04:07+08:00">2021-12-16</time>
+              <time title="Created: 2021-12-23 18:10:54" itemprop="dateCreated datePublished" datetime="2021-12-23T18:10:54+08:00">2021-12-23</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-26 17:31:08" itemprop="dateModified" datetime="2021-12-26T17:31:08+08:00">2021-12-26</time>
+                <time title="Modified: 2021-12-26 18:11:44" itemprop="dateModified" datetime="2021-12-26T18:11:44+08:00">2021-12-26</time>
               </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">Linux编程</span></a>
-                </span>
-            </span>
 
           
 
@@ -213,39 +208,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <blockquote>
-<p>起因： 编译AOSP源码， 提示最小内存为 16gb</p>
-</blockquote>
-<p>本机环境：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">████████  ████████  ████████     young@dev</span><br><span class="line">████████  ████████  ████████     young@dev</span><br><span class="line">████████  ████████  ████████     Uptime: 3h 52m</span><br><span class="line">                                 Shell: bash 5.1.12</span><br><span class="line">████████  ████████  ████████     DE: GNOME 41.2</span><br><span class="line">████████  ████████  ████████     GTK Theme: Matcha-light-sea [GTK2/3]</span><br><span class="line">                                 Icon Theme: Papirus-Adapta-Maia</span><br><span class="line">████████  ████████  ████████     CPU: AMD Ryzen 7 5700G with Radeon Graphics @ 16x 3.8GHz</span><br><span class="line">██████████████████  ████████     GPU: AMD/ATI</span><br><span class="line">████████  ████████  ████████     Kernel: x86_64 Linux 5.15.7-1-MANJARO</span><br><span class="line">██████████████████  ████████     Resolution: 2560x1440</span><br><span class="line">████████  ████████  ████████     WM Theme: </span><br><span class="line">██████████████████  ████████     Disk: 383G / 946G (43%)</span><br><span class="line">██████████████████  ████████     RAM: 3558MiB / 15448MiB</span><br><span class="line">████████  ████████  ████████     Packages: 1375</span><br><span class="line">                                 OS: Manjaro 21.2.0 Qonos</span><br><span class="line">████████  ████████  ████████     Font: Noto Sans 12</span><br><span class="line">████████  ████████  ████████     WM: Mutter</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置及安装相应软件"><a href="#配置及安装相应软件" class="headerlink" title="配置及安装相应软件"></a>配置及安装相应软件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo yay -Syyu</span><br><span class="line"></span><br><span class="line">yay -S lineageos-devel</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="建立交换文件"><a href="#建立交换文件" class="headerlink" title="建立交换文件"></a>建立交换文件</h2><p>使用dd去创建一个由你自己指定大小的交换文件。例如，创建一个 20 GiB 的交换文件:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dd <span class="keyword">if</span>=/dev/zero of=/swapfile bs=1G count=20 status=progress</span><br></pre></td></tr></table></figure>
-
-<p>为交换文件设置权限（交换文件全局可读是一个巨大的本地漏洞）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 600 /swapfile</span><br></pre></td></tr></table></figure>
-
-<p>创建正确大小的文件后，将其格式化用来作为交换文件：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkswap /swapfile</span><br></pre></td></tr></table></figure>
-
-<p>启用交换文件：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo swapon /swapfile</span><br></pre></td></tr></table></figure>
-
-<p>最后，编辑 /etc/fstab，在为交换文件添加一个条目：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/swapfile none swap defaults 0 0</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
+        <h1 id="BLock"><a href="#BLock" class="headerlink" title="BLock"></a>BLock</h1><p><img src="https://blog.zeerd.com/public/2021/01/19/ieee802.3.96.1.svg" alt="pic"></p>
+<h2 id="PHY-amp-MAC"><a href="#PHY-amp-MAC" class="headerlink" title="PHY &amp; MAC"></a>PHY &amp; MAC</h2><p>从上到下：<br>| | |<br>| – | – |<br>| I/F  |比如PCI总线。负责将IP数据包（或其他协议）传递给MAC层。  |<br>| MAC  |包含MAC子层和LLC子层。|<br>| MII/SMI |    Media Independed Interfade，介质独立界面。连接MAC和PHY。MAC对PHY的工作状态的确定和对PHY的控制则是使用SMI（Serial Management Interface）界面通过读写PHY的寄存器来完成的。|<br>| PHY    | 以太网的物理层又包括MII/GMII（介质独立接口）子层、PCS（物理编码子层）、PMA（物理介质附加）子层、PMD（物理介质相关）子层、MDI子层。 对PHY来说，没有帧的概念，都是二进制数据。|<br>| I/F    | 如RJ45。|</p>
+<p>当然，肯定还有其他的，什么稳压的、滤波的，就不写在这里了。<br>可以看到，基本上涉及算法的东西应该都在MAC里面。毕竟到了PHY就不能区分协议了。</p>
+<h2 id="固件与驱动："><a href="#固件与驱动：" class="headerlink" title="固件与驱动："></a>固件与驱动：</h2><p>固件：运行在设备自身的微控制器内部的代码。原则上，应该将尽可能多的功能做入到固件中。只有固件没有驱动才是最完美的。<br>驱动：那些操作系统相关的、无法跨系统共通的、必须独立出来的代码留在驱动中。</p>
+<h2 id="Hardware-Arch"><a href="#Hardware-Arch" class="headerlink" title="Hardware Arch"></a>Hardware Arch</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">graph TD;</span><br><span class="line">    DMA--&gt;CPU/MCU;</span><br><span class="line">    DMA--&gt;MAC;</span><br><span class="line">    CPU/MCU--&gt;DMA;</span><br><span class="line"></span><br><span class="line">    CPU/MCU--&gt;MAC;</span><br><span class="line">    MAC--&gt;CPU/MCU;</span><br><span class="line">    MAC--&gt;DMA</span><br><span class="line">    MAC--&gt;PHY</span><br><span class="line">    PHY--&gt;MAC</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -255,7 +222,9 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/osi/" rel="tag"># osi</a>
+              <a href="/tags/phy/" rel="tag"># phy</a>
+              <a href="/tags/mac/" rel="tag"># mac</a>
           </div>
 
         
@@ -264,12 +233,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/12/05/%E5%B8%B8%E7%94%A8%E4%BD%8D%E8%BF%90%E7%AE%97/" rel="prev" title="常用位运算">
-      <i class="fa fa-chevron-left"></i> 常用位运算
+    <a href="/2021/12/22/someip-02-vsomeip-with-ap/" rel="prev" title="someip-01: vsomeip with ap">
+      <i class="fa fa-chevron-left"></i> someip-01: vsomeip with ap
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/12/20/someip-00%EF%BC%9A-vsomeip/" rel="next" title="someip 00： vsomeip">
-      someip 00： vsomeip <i class="fa fa-chevron-right"></i>
+    <a href="/2021/12/26/service-discovery/" rel="next" title="service-discovery">
+      service-discovery <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -329,7 +298,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%AE%89%E8%A3%85%E7%9B%B8%E5%BA%94%E8%BD%AF%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">配置及安装相应软件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E4%BA%A4%E6%8D%A2%E6%96%87%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">建立交换文件</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#BLock"><span class="nav-number">1.</span> <span class="nav-text">BLock</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#PHY-amp-MAC"><span class="nav-number">1.1.</span> <span class="nav-text">PHY &amp; MAC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BA%E4%BB%B6%E4%B8%8E%E9%A9%B1%E5%8A%A8%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">固件与驱动：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hardware-Arch"><span class="nav-number">1.3.</span> <span class="nav-text">Hardware Arch</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -20,20 +20,21 @@
     var CONFIG = {"hostname":"4soos.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="起因： 编译AOSP源码， 提示最小内存为 16gb  本机环境： 123456789101112131415161718████████  ████████  ████████     young@dev████████  ████████  ████████     young@dev████████  ████████  ████████     Uptime: 3h 52m">
+  <meta name="description" content="vector autosar someip与vsomeip对接经验总结someip是现代车辆通信的主流通信协议知一 虽然someip协议已经基本成熟，但有多个实现版本，现在使用较多的主要有  vector autosar 的someip版本 vsomeip；  这两个版本在理论上是可以相互兼容正常通信的，但在实际使用过程中，仍然发现了一些问题； 在同一个局域网内，两方无法相互发现；原理：运行的so">
 <meta property="og:type" content="article">
-<meta property="og:title" content="manjaro_swap">
-<meta property="og:url" content="https://4soos.github.io/2021/12/16/manjaro-swap/index.html">
+<meta property="og:title" content="someip-01: vsomeip with ap">
+<meta property="og:url" content="https://4soos.github.io/2021/12/22/someip-02-vsomeip-with-ap/index.html">
 <meta property="og:site_name" content="Young&#39;s Blog">
-<meta property="og:description" content="起因： 编译AOSP源码， 提示最小内存为 16gb  本机环境： 123456789101112131415161718████████  ████████  ████████     young@dev████████  ████████  ████████     young@dev████████  ████████  ████████     Uptime: 3h 52m">
+<meta property="og:description" content="vector autosar someip与vsomeip对接经验总结someip是现代车辆通信的主流通信协议知一 虽然someip协议已经基本成熟，但有多个实现版本，现在使用较多的主要有  vector autosar 的someip版本 vsomeip；  这两个版本在理论上是可以相互兼容正常通信的，但在实际使用过程中，仍然发现了一些问题； 在同一个局域网内，两方无法相互发现；原理：运行的so">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-12-16T09:04:07.000Z">
-<meta property="article:modified_time" content="2021-12-26T09:31:08.279Z">
+<meta property="article:published_time" content="2021-12-22T10:10:05.000Z">
+<meta property="article:modified_time" content="2021-12-26T10:11:28.903Z">
 <meta property="article:author" content="Young">
-<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="someip">
+<meta property="article:tag" content="vSOMEIP">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://4soos.github.io/2021/12/16/manjaro-swap/">
+<link rel="canonical" href="https://4soos.github.io/2021/12/22/someip-02-vsomeip-with-ap/">
 
 
 <script id="page-configurations">
@@ -46,7 +47,7 @@
   };
 </script>
 
-  <title>manjaro_swap | Young's Blog</title>
+  <title>someip-01: vsomeip with ap | Young's Blog</title>
   
 
 
@@ -160,7 +161,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://4soos.github.io/2021/12/16/manjaro-swap/">
+    <link itemprop="mainEntityOfPage" href="https://4soos.github.io/2021/12/22/someip-02-vsomeip-with-ap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -173,7 +174,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          manjaro_swap
+          someip-01: vsomeip with ap
         </h1>
 
         <div class="post-meta">
@@ -183,24 +184,15 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-12-16 17:04:07" itemprop="dateCreated datePublished" datetime="2021-12-16T17:04:07+08:00">2021-12-16</time>
+              <time title="Created: 2021-12-22 18:10:05" itemprop="dateCreated datePublished" datetime="2021-12-22T18:10:05+08:00">2021-12-22</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-26 17:31:08" itemprop="dateModified" datetime="2021-12-26T17:31:08+08:00">2021-12-26</time>
+                <time title="Modified: 2021-12-26 18:11:28" itemprop="dateModified" datetime="2021-12-26T18:11:28+08:00">2021-12-26</time>
               </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">Linux编程</span></a>
-                </span>
-            </span>
 
           
 
@@ -213,39 +205,35 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <blockquote>
-<p>起因： 编译AOSP源码， 提示最小内存为 16gb</p>
-</blockquote>
-<p>本机环境：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">████████  ████████  ████████     young@dev</span><br><span class="line">████████  ████████  ████████     young@dev</span><br><span class="line">████████  ████████  ████████     Uptime: 3h 52m</span><br><span class="line">                                 Shell: bash 5.1.12</span><br><span class="line">████████  ████████  ████████     DE: GNOME 41.2</span><br><span class="line">████████  ████████  ████████     GTK Theme: Matcha-light-sea [GTK2/3]</span><br><span class="line">                                 Icon Theme: Papirus-Adapta-Maia</span><br><span class="line">████████  ████████  ████████     CPU: AMD Ryzen 7 5700G with Radeon Graphics @ 16x 3.8GHz</span><br><span class="line">██████████████████  ████████     GPU: AMD/ATI</span><br><span class="line">████████  ████████  ████████     Kernel: x86_64 Linux 5.15.7-1-MANJARO</span><br><span class="line">██████████████████  ████████     Resolution: 2560x1440</span><br><span class="line">████████  ████████  ████████     WM Theme: </span><br><span class="line">██████████████████  ████████     Disk: 383G / 946G (43%)</span><br><span class="line">██████████████████  ████████     RAM: 3558MiB / 15448MiB</span><br><span class="line">████████  ████████  ████████     Packages: 1375</span><br><span class="line">                                 OS: Manjaro 21.2.0 Qonos</span><br><span class="line">████████  ████████  ████████     Font: Noto Sans 12</span><br><span class="line">████████  ████████  ████████     WM: Mutter</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置及安装相应软件"><a href="#配置及安装相应软件" class="headerlink" title="配置及安装相应软件"></a>配置及安装相应软件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo yay -Syyu</span><br><span class="line"></span><br><span class="line">yay -S lineageos-devel</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="建立交换文件"><a href="#建立交换文件" class="headerlink" title="建立交换文件"></a>建立交换文件</h2><p>使用dd去创建一个由你自己指定大小的交换文件。例如，创建一个 20 GiB 的交换文件:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dd <span class="keyword">if</span>=/dev/zero of=/swapfile bs=1G count=20 status=progress</span><br></pre></td></tr></table></figure>
-
-<p>为交换文件设置权限（交换文件全局可读是一个巨大的本地漏洞）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 600 /swapfile</span><br></pre></td></tr></table></figure>
-
-<p>创建正确大小的文件后，将其格式化用来作为交换文件：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkswap /swapfile</span><br></pre></td></tr></table></figure>
-
-<p>启用交换文件：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo swapon /swapfile</span><br></pre></td></tr></table></figure>
-
-<p>最后，编辑 /etc/fstab，在为交换文件添加一个条目：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/swapfile none swap defaults 0 0</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
+        <h2 id="vector-autosar-someip与vsomeip对接经验总结"><a href="#vector-autosar-someip与vsomeip对接经验总结" class="headerlink" title="vector autosar someip与vsomeip对接经验总结"></a>vector autosar someip与vsomeip对接经验总结</h2><p>someip是现代车辆通信的主流通信协议知一</p>
+<p>虽然someip协议已经基本成熟，但有多个实现版本，现在使用较多的主要有</p>
+<ul>
+<li>vector autosar 的someip版本</li>
+<li>vsomeip；</li>
+</ul>
+<p>这两个版本在理论上是可以相互兼容正常通信的，但在实际使用过程中，仍然发现了一些问题；</p>
+<h3 id="在同一个局域网内，两方无法相互发现；"><a href="#在同一个局域网内，两方无法相互发现；" class="headerlink" title="在同一个局域网内，两方无法相互发现；"></a>在同一个局域网内，两方无法相互发现；</h3><p>原理：运行的someip应用需要借助于各自的someipd服务来彼此发现对方；</p>
+<p>而someipsd实现的someip sd协议是借助于udp的广播来发布或收集网络中的其他someip应用的相关信息的；</p>
+<p>所以要想两方能够彼此发现，首先要将someip sd的服务设置为同一广播地址以及服务端口号；</p>
+<p>这个信息可以在vsomeip程序加载的vsomeip-tcp-server.jason等配置文件中进行修改；</p>
+<p>理想情况下，将两方的配置修改成一样就可以正常发现彼此；</p>
+<h3 id="将someip-sd的广播地址以及服务端口号配置成一样，双方仍然是无法发现彼此；"><a href="#将someip-sd的广播地址以及服务端口号配置成一样，双方仍然是无法发现彼此；" class="headerlink" title="将someip sd的广播地址以及服务端口号配置成一样，双方仍然是无法发现彼此；"></a>将someip sd的广播地址以及服务端口号配置成一样，双方仍然是无法发现彼此；</h3><p>这个首先要借助网络工具来抓包进行确认，是否可以在网络上抓取到相应的udp数据包，来检查是不是由于网络设置的原因造成的；</p>
+<p>如果抓包工具可以确认在网络上有影响的udp广播包；</p>
+<p>那么就要对someip的版本号配置进行确认；</p>
+<p>在使用vsomeip 2.10版本时发现，vsomeip 代码中的默认主版本号信息为0x00;而vector autasar的someip版本号信息不特意更改的话是0x01;</p>
+<p>由于双方版本号不一致，虽然彼此可以收到对方发出的sd udp广播包，但在软件中彼此仍然无法相互识别。并且在vsomeip中会频繁输出warning信息；</p>
+<p>将双方的版本号信息设置为一致时，就相互就可以识别了；</p>
+<h3 id="sd-广播地址服务端口号以及版本号都配置成一致；但彼此仍然无法发现；"><a href="#sd-广播地址服务端口号以及版本号都配置成一致；但彼此仍然无法发现；" class="headerlink" title="sd 广播地址服务端口号以及版本号都配置成一致；但彼此仍然无法发现；"></a>sd 广播地址服务端口号以及版本号都配置成一致；但彼此仍然无法发现；</h3><p>这个就需要排查网络设置问题；</p>
+<p>(1)双方是否可以彼此ping通；</p>
+<p>(2)路由表以及gateway是否配置正确；</p>
+<p>我就遇到双方可以ping通，但由于路由表以及gateway信息缺失使得双方无法彼此发现的问题；</p>
+<h3 id="双方可以彼此发现，但客户端一订阅或者发送request底层tcp链接就断开的情况；"><a href="#双方可以彼此发现，但客户端一订阅或者发送request底层tcp链接就断开的情况；" class="headerlink" title="双方可以彼此发现，但客户端一订阅或者发送request底层tcp链接就断开的情况；"></a>双方可以彼此发现，但客户端一订阅或者发送request底层tcp链接就断开的情况；</h3><p>这个问题，也是由于服务版本号的问题（interface version）;</p>
+<p>由于某些特殊的原因，将autosar someip的主版本号设置为255可以与vsomeip 的0版本号相互发现；</p>
+<p>但是当进行交互时，在代码中会对interface version配置进行验证。如果双方的interface version不一致，那么就会出现一通信底层tcp的链接就会断开情况；</p>
+<p>这个需要注意检查；</p>
+<h3 id="当vsomeip作为服务器-autosar-someip作为客户端。vsomeip发送的event-autosar-someip的客户端无法接收到的情况；"><a href="#当vsomeip作为服务器-autosar-someip作为客户端。vsomeip发送的event-autosar-someip的客户端无法接收到的情况；" class="headerlink" title="当vsomeip作为服务器,autosar someip作为客户端。vsomeip发送的event,autosar someip的客户端无法接收到的情况；"></a>当vsomeip作为服务器,autosar someip作为客户端。vsomeip发送的event,autosar someip的客户端无法接收到的情况；</h3><p>首先要对someip传输类型进行确认（使用的是tcp或者udp）;</p>
+<p>假如使用tcp进行传输；则需要将vsomeip 配置文件中event配置添加is_reliable为true的字段；</p>
+<p>否则autasar someip tcp的客户端无法正常接收；</p>
 
     </div>
 
@@ -255,7 +243,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/someip/" rel="tag"># someip</a>
+              <a href="/tags/vSOMEIP/" rel="tag"># vSOMEIP</a>
           </div>
 
         
@@ -264,12 +253,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/12/05/%E5%B8%B8%E7%94%A8%E4%BD%8D%E8%BF%90%E7%AE%97/" rel="prev" title="常用位运算">
-      <i class="fa fa-chevron-left"></i> 常用位运算
+    <a href="/2021/12/21/someip-01-code/" rel="prev" title="someip-01: code">
+      <i class="fa fa-chevron-left"></i> someip-01: code
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/12/20/someip-00%EF%BC%9A-vsomeip/" rel="next" title="someip 00： vsomeip">
-      someip 00： vsomeip <i class="fa fa-chevron-right"></i>
+    <a href="/2021/12/23/osi-phy-mac/" rel="next" title="osi: phy&mac">
+      osi: phy&mac <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -329,7 +318,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%AE%89%E8%A3%85%E7%9B%B8%E5%BA%94%E8%BD%AF%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">配置及安装相应软件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E4%BA%A4%E6%8D%A2%E6%96%87%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">建立交换文件</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#vector-autosar-someip%E4%B8%8Evsomeip%E5%AF%B9%E6%8E%A5%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">vector autosar someip与vsomeip对接经验总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E5%90%8C%E4%B8%80%E4%B8%AA%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85%EF%BC%8C%E4%B8%A4%E6%96%B9%E6%97%A0%E6%B3%95%E7%9B%B8%E4%BA%92%E5%8F%91%E7%8E%B0%EF%BC%9B"><span class="nav-number">1.1.</span> <span class="nav-text">在同一个局域网内，两方无法相互发现；</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86someip-sd%E7%9A%84%E5%B9%BF%E6%92%AD%E5%9C%B0%E5%9D%80%E4%BB%A5%E5%8F%8A%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8F%A3%E5%8F%B7%E9%85%8D%E7%BD%AE%E6%88%90%E4%B8%80%E6%A0%B7%EF%BC%8C%E5%8F%8C%E6%96%B9%E4%BB%8D%E7%84%B6%E6%98%AF%E6%97%A0%E6%B3%95%E5%8F%91%E7%8E%B0%E5%BD%BC%E6%AD%A4%EF%BC%9B"><span class="nav-number">1.2.</span> <span class="nav-text">将someip sd的广播地址以及服务端口号配置成一样，双方仍然是无法发现彼此；</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sd-%E5%B9%BF%E6%92%AD%E5%9C%B0%E5%9D%80%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8F%A3%E5%8F%B7%E4%BB%A5%E5%8F%8A%E7%89%88%E6%9C%AC%E5%8F%B7%E9%83%BD%E9%85%8D%E7%BD%AE%E6%88%90%E4%B8%80%E8%87%B4%EF%BC%9B%E4%BD%86%E5%BD%BC%E6%AD%A4%E4%BB%8D%E7%84%B6%E6%97%A0%E6%B3%95%E5%8F%91%E7%8E%B0%EF%BC%9B"><span class="nav-number">1.3.</span> <span class="nav-text">sd 广播地址服务端口号以及版本号都配置成一致；但彼此仍然无法发现；</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E6%96%B9%E5%8F%AF%E4%BB%A5%E5%BD%BC%E6%AD%A4%E5%8F%91%E7%8E%B0%EF%BC%8C%E4%BD%86%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%80%E8%AE%A2%E9%98%85%E6%88%96%E8%80%85%E5%8F%91%E9%80%81request%E5%BA%95%E5%B1%82tcp%E9%93%BE%E6%8E%A5%E5%B0%B1%E6%96%AD%E5%BC%80%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%9B"><span class="nav-number">1.4.</span> <span class="nav-text">双方可以彼此发现，但客户端一订阅或者发送request底层tcp链接就断开的情况；</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%93vsomeip%E4%BD%9C%E4%B8%BA%E6%9C%8D%E5%8A%A1%E5%99%A8-autosar-someip%E4%BD%9C%E4%B8%BA%E5%AE%A2%E6%88%B7%E7%AB%AF%E3%80%82vsomeip%E5%8F%91%E9%80%81%E7%9A%84event-autosar-someip%E7%9A%84%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%97%A0%E6%B3%95%E6%8E%A5%E6%94%B6%E5%88%B0%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%9B"><span class="nav-number">1.5.</span> <span class="nav-text">当vsomeip作为服务器,autosar someip作为客户端。vsomeip发送的event,autosar someip的客户端无法接收到的情况；</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
