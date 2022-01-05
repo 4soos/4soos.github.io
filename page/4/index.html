@@ -156,7 +156,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://4soos.github.io/2021/12/22/someip-02-vsomeip-with-ap/">
+    <link itemprop="mainEntityOfPage" href="https://4soos.github.io/2021/12/23/osi-phy-mac/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -170,7 +170,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/22/someip-02-vsomeip-with-ap/" class="post-title-link" itemprop="url">someip-01: vsomeip with ap</a>
+            <a href="/2021/12/23/osi-phy-mac/" class="post-title-link" itemprop="url">osi: phy&mac</a>
         </h2>
 
         <div class="post-meta">
@@ -180,14 +180,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-12-22 18:10:05" itemprop="dateCreated datePublished" datetime="2021-12-22T18:10:05+08:00">2021-12-22</time>
+              <time title="Created: 2021-12-23 18:10:54" itemprop="dateCreated datePublished" datetime="2021-12-23T18:10:54+08:00">2021-12-23</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-26 18:11:28" itemprop="dateModified" datetime="2021-12-26T18:11:28+08:00">2021-12-26</time>
+                <time title="Modified: 2021-12-26 18:11:44" itemprop="dateModified" datetime="2021-12-26T18:11:44+08:00">2021-12-26</time>
               </span>
 
           
@@ -201,35 +201,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="vector-autosar-someip与vsomeip对接经验总结"><a href="#vector-autosar-someip与vsomeip对接经验总结" class="headerlink" title="vector autosar someip与vsomeip对接经验总结"></a>vector autosar someip与vsomeip对接经验总结</h2><p>someip是现代车辆通信的主流通信协议知一</p>
-<p>虽然someip协议已经基本成熟，但有多个实现版本，现在使用较多的主要有</p>
-<ul>
-<li>vector autosar 的someip版本</li>
-<li>vsomeip；</li>
-</ul>
-<p>这两个版本在理论上是可以相互兼容正常通信的，但在实际使用过程中，仍然发现了一些问题；</p>
-<h3 id="在同一个局域网内，两方无法相互发现；"><a href="#在同一个局域网内，两方无法相互发现；" class="headerlink" title="在同一个局域网内，两方无法相互发现；"></a>在同一个局域网内，两方无法相互发现；</h3><p>原理：运行的someip应用需要借助于各自的someipd服务来彼此发现对方；</p>
-<p>而someipsd实现的someip sd协议是借助于udp的广播来发布或收集网络中的其他someip应用的相关信息的；</p>
-<p>所以要想两方能够彼此发现，首先要将someip sd的服务设置为同一广播地址以及服务端口号；</p>
-<p>这个信息可以在vsomeip程序加载的vsomeip-tcp-server.jason等配置文件中进行修改；</p>
-<p>理想情况下，将两方的配置修改成一样就可以正常发现彼此；</p>
-<h3 id="将someip-sd的广播地址以及服务端口号配置成一样，双方仍然是无法发现彼此；"><a href="#将someip-sd的广播地址以及服务端口号配置成一样，双方仍然是无法发现彼此；" class="headerlink" title="将someip sd的广播地址以及服务端口号配置成一样，双方仍然是无法发现彼此；"></a>将someip sd的广播地址以及服务端口号配置成一样，双方仍然是无法发现彼此；</h3><p>这个首先要借助网络工具来抓包进行确认，是否可以在网络上抓取到相应的udp数据包，来检查是不是由于网络设置的原因造成的；</p>
-<p>如果抓包工具可以确认在网络上有影响的udp广播包；</p>
-<p>那么就要对someip的版本号配置进行确认；</p>
-<p>在使用vsomeip 2.10版本时发现，vsomeip 代码中的默认主版本号信息为0x00;而vector autasar的someip版本号信息不特意更改的话是0x01;</p>
-<p>由于双方版本号不一致，虽然彼此可以收到对方发出的sd udp广播包，但在软件中彼此仍然无法相互识别。并且在vsomeip中会频繁输出warning信息；</p>
-<p>将双方的版本号信息设置为一致时，就相互就可以识别了；</p>
-<h3 id="sd-广播地址服务端口号以及版本号都配置成一致；但彼此仍然无法发现；"><a href="#sd-广播地址服务端口号以及版本号都配置成一致；但彼此仍然无法发现；" class="headerlink" title="sd 广播地址服务端口号以及版本号都配置成一致；但彼此仍然无法发现；"></a>sd 广播地址服务端口号以及版本号都配置成一致；但彼此仍然无法发现；</h3><p>这个就需要排查网络设置问题；</p>
-<p>(1)双方是否可以彼此ping通；</p>
-<p>(2)路由表以及gateway是否配置正确；</p>
-<p>我就遇到双方可以ping通，但由于路由表以及gateway信息缺失使得双方无法彼此发现的问题；</p>
-<h3 id="双方可以彼此发现，但客户端一订阅或者发送request底层tcp链接就断开的情况；"><a href="#双方可以彼此发现，但客户端一订阅或者发送request底层tcp链接就断开的情况；" class="headerlink" title="双方可以彼此发现，但客户端一订阅或者发送request底层tcp链接就断开的情况；"></a>双方可以彼此发现，但客户端一订阅或者发送request底层tcp链接就断开的情况；</h3><p>这个问题，也是由于服务版本号的问题（interface version）;</p>
-<p>由于某些特殊的原因，将autosar someip的主版本号设置为255可以与vsomeip 的0版本号相互发现；</p>
-<p>但是当进行交互时，在代码中会对interface version配置进行验证。如果双方的interface version不一致，那么就会出现一通信底层tcp的链接就会断开情况；</p>
-<p>这个需要注意检查；</p>
-<h3 id="当vsomeip作为服务器-autosar-someip作为客户端。vsomeip发送的event-autosar-someip的客户端无法接收到的情况；"><a href="#当vsomeip作为服务器-autosar-someip作为客户端。vsomeip发送的event-autosar-someip的客户端无法接收到的情况；" class="headerlink" title="当vsomeip作为服务器,autosar someip作为客户端。vsomeip发送的event,autosar someip的客户端无法接收到的情况；"></a>当vsomeip作为服务器,autosar someip作为客户端。vsomeip发送的event,autosar someip的客户端无法接收到的情况；</h3><p>首先要对someip传输类型进行确认（使用的是tcp或者udp）;</p>
-<p>假如使用tcp进行传输；则需要将vsomeip 配置文件中event配置添加is_reliable为true的字段；</p>
-<p>否则autasar someip tcp的客户端无法正常接收；</p>
+          <h1 id="BLock"><a href="#BLock" class="headerlink" title="BLock"></a>BLock</h1><p><img src="https://blog.zeerd.com/public/2021/01/19/ieee802.3.96.1.svg" alt="pic"></p>
+<h2 id="PHY-amp-MAC"><a href="#PHY-amp-MAC" class="headerlink" title="PHY &amp; MAC"></a>PHY &amp; MAC</h2><p>从上到下：<br>| | |<br>| – | – |<br>| I/F  |比如PCI总线。负责将IP数据包（或其他协议）传递给MAC层。  |<br>| MAC  |包含MAC子层和LLC子层。|<br>| MII/SMI |    Media Independed Interfade，介质独立界面。连接MAC和PHY。MAC对PHY的工作状态的确定和对PHY的控制则是使用SMI（Serial Management Interface）界面通过读写PHY的寄存器来完成的。|<br>| PHY    | 以太网的物理层又包括MII/GMII（介质独立接口）子层、PCS（物理编码子层）、PMA（物理介质附加）子层、PMD（物理介质相关）子层、MDI子层。 对PHY来说，没有帧的概念，都是二进制数据。|<br>| I/F    | 如RJ45。|</p>
+<p>当然，肯定还有其他的，什么稳压的、滤波的，就不写在这里了。<br>可以看到，基本上涉及算法的东西应该都在MAC里面。毕竟到了PHY就不能区分协议了。</p>
+<h2 id="固件与驱动："><a href="#固件与驱动：" class="headerlink" title="固件与驱动："></a>固件与驱动：</h2><p>固件：运行在设备自身的微控制器内部的代码。原则上，应该将尽可能多的功能做入到固件中。只有固件没有驱动才是最完美的。<br>驱动：那些操作系统相关的、无法跨系统共通的、必须独立出来的代码留在驱动中。</p>
+<h2 id="Hardware-Arch"><a href="#Hardware-Arch" class="headerlink" title="Hardware Arch"></a>Hardware Arch</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">graph TD;</span><br><span class="line">    DMA--&gt;CPU/MCU;</span><br><span class="line">    DMA--&gt;MAC;</span><br><span class="line">    CPU/MCU--&gt;DMA;</span><br><span class="line"></span><br><span class="line">    CPU/MCU--&gt;MAC;</span><br><span class="line">    MAC--&gt;CPU/MCU;</span><br><span class="line">    MAC--&gt;DMA</span><br><span class="line">    MAC--&gt;PHY</span><br><span class="line">    PHY--&gt;MAC</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -248,7 +224,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -313,7 +289,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -326,7 +302,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
