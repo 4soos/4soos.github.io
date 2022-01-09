@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"4soos.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"4soos.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="C&#x2F;CPP, Linux, Notes">
@@ -156,7 +156,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://4soos.github.io/2021/11/20/linux-system-programming/">
+    <link itemprop="mainEntityOfPage" href="https://4soos.github.io/2021/11/24/Linux-Kernel-%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -170,7 +170,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/20/linux-system-programming/" class="post-title-link" itemprop="url">linux_system_programming</a>
+            <a href="/2021/11/24/Linux-Kernel-%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" class="post-title-link" itemprop="url">Linux Kernel 编译调试（Qemu + gdb）</a>
         </h2>
 
         <div class="post-meta">
@@ -179,19 +179,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-11-20 19:22:00 / Modified: 21:57:50" itemprop="dateCreated datePublished" datetime="2021-11-20T19:22:00+08:00">2021-11-20</time>
+              <time title="Created: 2021-11-24 22:03:26" itemprop="dateCreated datePublished" datetime="2021-11-24T22:03:26+08:00">2021-11-24</time>
             </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">Linux编程</span></a>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
                 </span>
-            </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-25 00:39:13" itemprop="dateModified" datetime="2021-11-25T00:39:13+08:00">2021-11-25</time>
+              </span>
 
           
 
@@ -204,92 +201,60 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><p>在深入系统调用的运作方式之前，务必关注以下几点。</p>
+          <h2 id="编译环境"><a href="#编译环境" class="headerlink" title="编译环境"></a>编译环境</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">██████████████████  ████████     4soos@dev</span><br><span class="line">██████████████████  ████████     OS: Manjaro 21.2.0 Qonos</span><br><span class="line">██████████████████  ████████     Kernel: x86_64 Linux 5.10.79-1-MANJARO</span><br><span class="line">██████████████████  ████████     Uptime: 19m</span><br><span class="line">████████            ████████     Packages: 1324</span><br><span class="line">████████  ████████  ████████     Shell: bash 5.1.8</span><br><span class="line">████████  ████████  ████████     Resolution: 2560x1440</span><br><span class="line">████████  ████████  ████████     DE: GNOME 41.1</span><br><span class="line">████████  ████████  ████████     WM: Mutter</span><br><span class="line">████████  ████████  ████████     WM Theme: </span><br><span class="line">████████  ████████  ████████     GTK Theme: Matcha-dark-pueril [GTK2/3]</span><br><span class="line">████████  ████████  ████████     Icon Theme: Papirus-Adapta-Maia</span><br><span class="line">████████  ████████  ████████     Font: Noto Sans 12</span><br><span class="line">████████  ████████  ████████     Disk: 150G / 946G (17%)</span><br><span class="line">                                 CPU: AMD Ryzen 7 5700G with Radeon Graphics @ 16x 3.8GHz</span><br><span class="line">                                 GPU: AMD RENOIR (DRM 3.40.0, 5.10.79-1-MANJARO, LLVM 13.0.0)</span><br><span class="line">                                 RAM: 2030MiB / 15453MiB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="源码："><a href="#源码：" class="headerlink" title="源码："></a>源码：</h2><p><a target="_blank" rel="noopener" href="https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.15.4.tar.xz">https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.15.4.tar.xz</a></p>
+<h2 id="工具集"><a href="#工具集" class="headerlink" title="工具集"></a>工具集</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yay -S base-devel</span><br></pre></td></tr></table></figure>
+
+<h2 id="编译步骤"><a href="#编译步骤" class="headerlink" title="编译步骤"></a>编译步骤</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">make menuconfig <span class="comment"># 内核配置， 可以默认配置</span></span><br><span class="line"></span><br><span class="line">make -j$(nproc) <span class="comment"># -j job 一般为线程数</span></span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x6455b190)</span><br><span class="line">Kernel: arch/x86/boot/bzImage is ready  (<span class="comment">#1)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>编好之后的产物为 <code>arch/x86/boot/bzImage</code>。</p>
+<h2 id="rootfs-和文件系统简介"><a href="#rootfs-和文件系统简介" class="headerlink" title="rootfs 和文件系统简介"></a>rootfs 和文件系统简介</h2><p><code>rootfs</code>是基于内存的文件系统，所有操作都在内存中完成；也没有实际的存储设备，所以不需要设备驱动程序的参与。<br>基于以上原因，linux在启动阶段使用<code>rootfs</code>文件系统，当磁盘驱动程序和磁盘文件系统成功加载后，linux系统会将系统根目录从<code>rootfs</code>切换到磁盘文件系统。</p>
+<p>大致的启动流程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">start_kernel</span><br><span class="line">　　vfs_caches_init</span><br><span class="line">　　　　mnt_init</span><br><span class="line">　　　　　　init_rootfs注册rootfs文件系统</span><br><span class="line">　　　　　　init_mount_tree 挂载rootfs文件系统</span><br><span class="line">　　　　　　　　vfs_kern_mount</span><br><span class="line">　　　　　　　　　　mount_fs</span><br><span class="line">　　　　　　　　　　　　type-&gt;mount其实是rootfs_mount</span><br><span class="line">　　　　　　　　　　　　　　mount_nodev</span><br><span class="line">　　　　　　　　　　　　　　　　fill_super 其实是ramfs_fill_super</span><br><span class="line">　　　　　　　　　　　　　　　　　　inode = ramfs_get_inode(sb, NULL, S_IFDIR | fsi-&gt;mount_opts.mode, 0);</span><br><span class="line">　　　　　　　　　　　　　　　　　　sb-&gt;s_root = d_make_root(inode);</span><br><span class="line">　　　　　　　　　　　　　　　　　　　　static const struct qstr name = QSTR_INIT(“/”, 1);[1*]</span><br><span class="line">　　　　　　　　　　　　　　　　　　　　__d_alloc(root_inode-&gt;i_sb, &amp;name);</span><br><span class="line">　　　　　　　　　　…</span><br><span class="line">　　　　　　　　　　mnt-&gt;mnt.mnt_root = root;[2*]</span><br><span class="line">　　　　　　　　　　mnt-&gt;mnt.mnt_sb = root-&gt;d_sb;[3*]</span><br><span class="line">　　　　　　　　　　mnt-&gt;mnt_mountpoint = mnt-&gt;mnt.mnt_root;[4*]</span><br><span class="line">　　　　　　　　　　mnt-&gt;mnt_parent = mnt;[5*]</span><br><span class="line">root.mnt = mnt;</span><br><span class="line">　　　　　　　　root.dentry = mnt-&gt;mnt_root;</span><br><span class="line">　　　　　　　　mnt-&gt;mnt_flags |= MNT_LOCKED;</span><br><span class="line">　　　　　　　　set_fs_pwd(current-&gt;fs, &amp;root);</span><br><span class="line">　　　　　　　　set_fs_root(current-&gt;fs, &amp;root);</span><br><span class="line">　　…</span><br><span class="line">　　rest_init</span><br><span class="line">　　kernel_thread(kernel_init, NULL, CLONE_FS);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>正常来说，根文件系统至少包括以下目录：</p>
 <ul>
-<li><p>系统调用将处理器从用户态切换到核心态，以便 CPU 访问受到保护的内核内存。</p>
+<li><p>/etc/：存储重要的配置文件。</p>
 </li>
-<li><p>系统调用的组成是固定的，每个系统调用都由一个唯一的数字来标识。<br>（程序通过名称来标识系统调用，对这一编号方案往往一无所知。）</p>
+<li><p>/bin/：存储常用且开机时必须用到的执行文件。</p>
 </li>
-<li><p>每个系统调用可辅之以一套参数，对用户空间（亦即进程的虚拟地址空间）与内核空<br>间之间（相互）传递的信息加以规范。</p>
+<li><p>/sbin/：存储着开机过程中所需的系统执行文件。</p>
+</li>
+<li><p>/lib/：存储/bin/及/sbin/的执行文件所需的链接库，以及Linux的内核模块。</p>
+</li>
+<li><p>/dev/：存储设备文件。</p>
 </li>
 </ul>
-<p>从编程角度来看，系统调用与 C 语言函数的调用很相似。然而，在执行系统调用时，其<br>幕后会历经诸多步骤。为说明这点，下面以一个具体的硬件平台—x86-32 为例，按事件发<br>生的顺序对这些步骤加以分析。<br>1． 应用程序通过调用 C 语言函数库中的外壳（wrapper）函数，来发起系统调用。</p>
-<p>2． 对系统调用中断处理例程（稍后介绍）来说，外壳函数必须保证所有的系统调用参数可用。<br>通过堆栈，这些参数传入外壳函数，但内核却希望将这些参数置入特定寄存器。<br>因此，外壳函数会将上述参数复制到寄存器。</p>
-<p>3． 由于所有系统调用进入内核的方式相同，内核需要设法区分每个系统调用。为此，外壳函<br>数会将系统调用编号复制到一个特殊的 CPU 寄存器（%eax）中。</p>
-<p>4． 外壳函数执行一条中断机器指令（int 0x80），引发处理器从用户态切换到核心态，并执行<br>系统中断 0x80 (十进制数 128)的中断矢量所指向的代码。</p>
-<p>5． 为响应中断 0x80，内核会调用 system_call()例程（位于汇编文件 arch/i386/entry.S 中）来<br>处理这次中断，具体如下。<br>    a）在内核栈中保存寄存器值（参见 6.5 节）。 他<br>    b）审核系统调用编号的有效性。<br>    c）以系统调用编号对存放所有调用服务例程的列表（内核变量 sys_call_table）进行索引，<br>    发现并调用相应的系统调用服务例程。若系统调用服务例程带有参数，那么将首先检查参数的有效性。<br>    例如，会检查地址指向用户空间的内存位置是否有效。随后，该服务例程会执行必要的任务，这可能涉及对特定参数中指定地址处的值进行修改，以及在用户内存和内核内存间传递数据（比如，在 I/O 操作中）。<br>    最后，该服务例程会将结果状态返回给 system_call()例程。<br>    d）从内核栈中恢复各寄存器值，并将系统调用返回值置于栈中。<br>    e）返回至外壳函数，同时将处理器切换回用户态。</p>
-<p>6． 若系统调用服务例程的返回值表明调用有误，外壳函数会使用该值来设置全局变量 errno<br>（参见 3.4 节）。然后，外壳函数会返回到调用程序，并同时返回一个整型值，以表明系统<br>调用是否成功。</p>
-<p><img src="imgs/linux_system_exec_steps.png" alt="execve"></p>
-<h2 id="文件I-O"><a href="#文件I-O" class="headerlink" title="文件I/O"></a>文件I/O</h2><p>所有执行 I/O 操作的系统调用都以文件描述符，一个非负整数（通常是小整数），来指代打开的文件。<br>文件描述符用以表示所有类型的已打开文件，包括管道（pipe）、FIFO、socket、终端、<br>设备和普通文件。针对每个进程，文件描述符都自成一套。</p>
-<p>大多数程序都能够使用 3 种标准的文件描述符：</p>
-<table>
-<thead>
-<tr>
-<th>描述符</th>
-<th>用途</th>
-<th>POSIX</th>
-<th>stdio</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>标准输入</td>
-<td>STDIN_FILENO</td>
-<td>stdin</td>
-</tr>
-<tr>
-<td>1</td>
-<td>标准输出</td>
-<td>STDOUT_FILENO</td>
-<td>stdout</td>
-</tr>
-<tr>
-<td>2</td>
-<td>标准错误</td>
-<td>STDERR_FILENO</td>
-<td>stderr</td>
-</tr>
-</tbody></table>
 <blockquote>
-<p>程序中指代这些文件描述符时，可以使用数字（0、1、2）表示，但最好是采用&lt;unistd.h&gt;<br>所定义的 POSIX 标准名称。</p>
+<p>以上列举出的目录必须存储在根文件系统上，缺一不可。</p>
 </blockquote>
-<h3 id="IO-操作的主要系统调用函数"><a href="#IO-操作的主要系统调用函数" class="headerlink" title="IO 操作的主要系统调用函数"></a>IO 操作的主要系统调用函数</h3><h4 id="open"><a href="#open" class="headerlink" title="open()"></a>open()</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fd = open(pathname, flags, mode)</span><br></pre></td></tr></table></figure>
-<p>函数打开 <code>pathname</code> 所标识的文件，并返回文件描<br>述符，用以在后续函数调用中指代打开的文件。如果文件不存在，<code>open()</code>函数可以<br>创建之，这取决于对位掩码参数 <code>flags</code> <code>的设置。flags</code> 参数还可指定文件的打开方式：只<br><code>读、只写亦或是读写方式。mode</code> 参数则指定了由 <code>open()</code>调用创建文件的访问权限，<br>如果 <code>open()</code> 函数并未创建文件，那么可以忽略或省略 <code>mode</code> 参数。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// open existing file for reading</span></span><br><span class="line">fd = open(<span class="string">&quot;start.up&quot;</span>, O_RDONLY);</span><br><span class="line"><span class="keyword">if</span> (fd == <span class="number">-1</span>)</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;can&#x27;t open&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// open new or existing file or reading and writing, truncating to zero</span></span><br><span class="line"><span class="comment">// bytes; file permissions read+write for owner, nothing for all others</span></span><br><span class="line">fd = open(<span class="string">&quot;myfile&quot;</span>, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR );</span><br><span class="line"><span class="keyword">if</span> (fd == <span class="number">-1</span>)</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;can&#x27;t open&quot;</span>);</span><br><span class="line"></span><br><span class="line">fd = open(<span class="string">&quot;w.log&quot;</span>, O_WRONLY|O_CREAT|O_TRUNC|O_APPEND, S_IRUSR|S_IWUSR);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (fd == <span class="number">-1</span>)</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;can&#x27;t open&quot;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>SUSv3 规定，如果调用 open()成功，必须保证其返回值为进程未用文件描述符中数值最小者。<br>可以利用该特性以特定文件描述符打开某一文件。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (close(STDIN_FILENO) == <span class="number">-1</span>)</span><br><span class="line">    print(<span class="string">&quot;close&quot;</span>);</span><br><span class="line"></span><br><span class="line">fd = open(pathname, O_RDONLY);</span><br><span class="line"><span class="keyword">if</span> (fd == <span class="number">-1</span>)</span><br><span class="line">    print(<span class="string">&quot;open&quot;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="read"><a href="#read" class="headerlink" title="read()"></a>read()</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numread = read(fd, buffer, count)</span><br></pre></td></tr></table></figure>
-<p>调用从 <code>fd</code> 所指代的打开文件中读取至多 <code>count</code> 字节的数据，并存储到 <code>buffer</code> 中。<br><code>read()</code>调用的返回值为实际读取到的字节数。如果再无字节可读（例如：读到文件结尾符 <code>EOF</code> 时），则返回值为 0。</p>
-<h4 id="write"><a href="#write" class="headerlink" title="write()"></a>write()</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numwritten = write(fd, buffer, count)</span><br></pre></td></tr></table></figure>
-<p>调用从 <code>buffer</code> 中读取多达 <code>count</code> 字节的数据写入由<br><code>fd</code> 所指代的已打开文件中。<code>write()</code>调用的返回值为实际写入文件中的字节数，且有可<br>能小于 <code>count。</code></p>
-<h4 id="close"><a href="#close" class="headerlink" title="close()"></a>close()</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">status = close(fd)</span><br></pre></td></tr></table></figure>
-<p>在所有输入/输出操作完成后，调用 <code>close()</code>，释放文件描述符 <code>fd</code> 以及与之相关的内核资源。</p>
-<blockquote>
-<p>使用IO 小例子(src/fileio/copy)： </p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;$ clang copy.c error_functions.c get_num.c -o copy</span><br><span class="line">&gt;$ ./copy newfile oldfile</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h1 id="Others-补充"><a href="#Others-补充" class="headerlink" title="Others (补充)"></a>Others (补充)</h1><h2 id="libc-amp-glibc"><a href="#libc-amp-glibc" class="headerlink" title="libc &amp; glibc"></a>libc &amp; glibc</h2><p><code>libc</code> 是 <code>ANSI C</code> 的函数库, <code>glibc</code> 是 <code>GNU C</code> 的函数库。</p>
-<p><code>ANSI C</code> 函数库是基本的 C 语言函数库，包含了 C 语言最基本的库函数。这个库可以根据头文件划分为 15 个部分，其中包括： </p>
 <ul>
-<li><code>&lt;ctype.h&gt;</code>：包含用来测试某个特征字符的函数的函数原型，以及用来转换大小写字母的函数原型；</li>
-<li><code>&lt;errno.h&gt;</code>：定义用来报告错误条件的宏；</li>
-<li><code>&lt;float.h&gt;</code>：包含系统的浮点数大小限制；</li>
-<li><code>&lt;math.h&gt;</code>：包含数学库函数的函数原型；</li>
-<li><code>&lt;stddef.h&gt;</code>：包含执行某些计算 C 所用的常见的函数定义；</li>
-<li><code>&lt;stdio.h&gt;</code>：包含标准输入输出库函数的函数原型，以及他们所用的信息；</li>
-<li><code>&lt;stdlib.h&gt;</code>：包含数字转换到文本，以及文本转换到数字的函数原型，还有内存分配、随机数字以及其他实用函数的函数原型；</li>
-<li><code>&lt;string.h&gt;</code>：包含字符串处理函数的函数原型；</li>
-<li><code>&lt;time.h&gt;</code>：包含时间和日期操作的函数原型和类型；</li>
-<li><code>&lt;stdarg.h&gt;</code>：包含函数原型和宏，用于处理未知数值和类型的函数的参数列表；</li>
-<li><code>&lt;signal.h&gt;</code>：包含函数原型和宏，用于处理程序执行期间可能出现的各种条件；</li>
-<li><code>&lt;setjmp.h&gt;</code>：包含可以绕过一般函数调用并返回序列的函数的原型，即非局部跳转；</li>
-<li><code>&lt;locale.h&gt;</code>：包含函数原型和其他信息，使程序可以针对所运行的地区进行修改。<br>地区的表示方法可以使计算机系统处理不同的数据表达约定，如全世界的日期、时间、美元数和大数字；</li>
-<li><code>&lt;assert.h&gt;</code>：包含宏和信息，用于进行诊断，帮助程序调试。</li>
+<li>/proc</li>
 </ul>
-<p><code>glibc</code>是linux下面c标准库的实现，即<code>GNU C Library</code>。<br><code>glibc</code>本身是GNU旗下的C标准库，后来逐渐成为了Linux的标准c库，而Linux下原来的标准c库<code>Linux libc</code>逐渐不再被维护。<br>Linux下面的标准c库不仅有这一个，如<code>uclibc</code>、<code>klibc</code>，以及上面被提到的<code>Linux libc</code>，但是glibc无疑是用得最多的。<br><code>glibc</code>在/lib目录下的.so文件为libc.so.6。</p>
+<p>这是一个空目录，常作为proc文件系统的挂接点，proc文件系统是个虚拟的文件系统，它没有实际的存储设备，里面的目录，文件都是由内核临时生成的，用来表示系统的运行状态，也可以操作其中的文件控制系统。</p>
+<h3 id="制作一个临时的rootfs"><a href="#制作一个临时的rootfs" class="headerlink" title="制作一个临时的rootfs"></a>制作一个临时的rootfs</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">touch main.c</span><br><span class="line">vim main.c</span><br></pre></td></tr></table></figure>
+
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;hello world!&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;hello world!&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;hello world!&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;hello world!&quot;</span>);</span><br><span class="line">    fflush(<span class="built_in">stdout</span>);</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;linux-5.14 &gt; \n&quot;</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="生成rootfs"><a href="#生成rootfs" class="headerlink" title="生成rootfs"></a>生成rootfs</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc --static -o hello_kernel main.c</span><br><span class="line"><span class="built_in">echo</span> hello_kernel | cpio -o --format=newc &gt; rootfs</span><br></pre></td></tr></table></figure>
+
+<h4 id="QEMU-启动"><a href="#QEMU-启动" class="headerlink" title="QEMU 启动"></a>QEMU 启动</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 \</span><br><span class="line">&gt; -kernel ./arch/x86/boot/bzImage \</span><br><span class="line">&gt; -initrd ./rootfs \</span><br><span class="line">&gt; -append <span class="string">&quot;root=/dev/ram rdinit=hello_kernel&quot;</span> \</span><br><span class="line">&gt; -smp 2 \</span><br><span class="line">&gt; -s -S</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这时的Qemu 会进入等待状态, </p>
+<h4 id="GDB-启动"><a href="#GDB-启动" class="headerlink" title="GDB 启动"></a>GDB 启动</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">gdb ./vmlinux</span><br><span class="line">......</span><br><span class="line">Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;...</span><br><span class="line">Reading symbols from ./vmlinux...</span><br><span class="line">(gdb) target remote:1234</span><br><span class="line">Remote debugging using :1234</span><br><span class="line">0x000000000000fff0 in exception_stacks ()</span><br><span class="line">(gdb) b start_kernel</span><br><span class="line">Breakpoint 1 at 0xfff0</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>_target remote:1234_， gdb 连接上qemu,</p>
+<p>_b start_kernel_， 设置断点： <code>start_kernel</code></p>
+<p>_c_， 继续执行：</p>
+<h2 id="VS-Code-上面调试"><a href="#VS-Code-上面调试" class="headerlink" title="VS Code 上面调试"></a>VS Code 上面调试</h2><p>需要安装好gdb插件<br>然后, 三个配置文件：</p>
+<p>c_cpp_properties.json</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;configurations&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;Linux kernel&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;cStandard&quot;</span>: <span class="string">&quot;c11&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;intelliSenseMode&quot;</span>: <span class="string">&quot;linux-clang-x64&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;compileCommands&quot;</span>: <span class="string">&quot;$&#123;&#125;/compile_commands.json&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">&quot;version&quot;</span>: <span class="number">4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>launch.json</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Use IntelliSense to learn about possible attributes.</span></span><br><span class="line">    <span class="comment">// Hover to view descriptions of existing attributes.</span></span><br><span class="line">    <span class="comment">// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span>: <span class="string">&quot;0.2.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;configurations&quot;</span>: [</span><br><span class="line"></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;(gdb) Launch&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;cppdbg&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;request&quot;</span>: <span class="string">&quot;launch&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;preLaunchTask&quot;</span>: <span class="string">&quot;qemu&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;miDebuggerServerAddress&quot;</span>:<span class="string">&quot;127.0.0.1:1234&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;program&quot;</span>: <span class="string">&quot;$&#123;workspaceFolder&#125;/vmlinux&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;args&quot;</span>: [],</span><br><span class="line">            <span class="attr">&quot;stopAtEntry&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">&quot;cwd&quot;</span>: <span class="string">&quot;$&#123;fileDirname&#125;&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;environment&quot;</span>: [],</span><br><span class="line">            <span class="attr">&quot;externalConsole&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">&quot;MIMode&quot;</span>: <span class="string">&quot;gdb&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;setupCommands&quot;</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">&quot;description&quot;</span>: <span class="string">&quot;Enable pretty-printing for gdb&quot;</span>,</span><br><span class="line">                    <span class="attr">&quot;text&quot;</span>: <span class="string">&quot;-enable-pretty-printing&quot;</span>,</span><br><span class="line">                    <span class="attr">&quot;ignoreFailures&quot;</span>: <span class="literal">true</span></span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>tasks.json</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="comment">// See https://go.microsoft.com/fwlink/?LinkId=733558</span></span><br><span class="line">    <span class="comment">// for the documentation about the tasks.json format</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span>: <span class="string">&quot;2.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;tasks&quot;</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;label&quot;</span>: <span class="string">&quot;qemu&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;shell&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;command&quot;</span>: <span class="string">&quot;qemu-system-x86_64 -kernel ./arch/x86/boot/bzImage -initrd ./rootfs -append \&quot;root=/dev/ram rdinit=hello_kernel\&quot; -smp 2 -s -S&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;presentation&quot;</span>: &#123;</span><br><span class="line">          <span class="attr">&quot;echo&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">          <span class="attr">&quot;clear&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">          <span class="attr">&quot;group&quot;</span>: <span class="string">&quot;qemu&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">&quot;isBackground&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">&quot;problemMatcher&quot;</span>: [</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">&quot;pattern&quot;</span>: [</span><br><span class="line">              &#123;</span><br><span class="line">                <span class="attr">&quot;regexp&quot;</span>: <span class="string">&quot;.&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;file&quot;</span>: <span class="number">1</span>,</span><br><span class="line">                <span class="attr">&quot;location&quot;</span>: <span class="number">2</span>,</span><br><span class="line">                <span class="attr">&quot;message&quot;</span>: <span class="number">3</span></span><br><span class="line">              &#125;</span><br><span class="line">            ],</span><br><span class="line">            <span class="attr">&quot;background&quot;</span>: &#123;</span><br><span class="line">              <span class="attr">&quot;activeOnStart&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">              <span class="attr">&quot;beginsPattern&quot;</span>: <span class="string">&quot;.&quot;</span>,</span><br><span class="line">              <span class="attr">&quot;endsPattern&quot;</span>: <span class="string">&quot;.&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;label&quot;</span>: <span class="string">&quot;build&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;shell&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;command&quot;</span>: <span class="string">&quot;make&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;group&quot;</span>: &#123;</span><br><span class="line">          <span class="attr">&quot;kind&quot;</span>: <span class="string">&quot;build&quot;</span>,</span><br><span class="line">          <span class="attr">&quot;isDefault&quot;</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">&quot;presentation&quot;</span>: &#123;</span><br><span class="line">          <span class="attr">&quot;echo&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">          <span class="attr">&quot;group&quot;</span>: <span class="string">&quot;build&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+
 
       
     </div>
@@ -308,7 +273,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -373,7 +338,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -386,7 +351,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -423,6 +388,26 @@
   </div>
 
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 

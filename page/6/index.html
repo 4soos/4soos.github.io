@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"4soos.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"4soos.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="C&#x2F;CPP, Linux, Notes">
@@ -156,7 +156,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://4soos.github.io/2021/12/21/someip-01-code/">
+    <link itemprop="mainEntityOfPage" href="https://4soos.github.io/2021/12/22/someip-02-vsomeip-with-ap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -170,7 +170,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/21/someip-01-code/" class="post-title-link" itemprop="url">someip-01: code</a>
+            <a href="/2021/12/22/someip-02-vsomeip-with-ap/" class="post-title-link" itemprop="url">someip-01: vsomeip with ap</a>
         </h2>
 
         <div class="post-meta">
@@ -180,14 +180,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-12-21 18:07:15" itemprop="dateCreated datePublished" datetime="2021-12-21T18:07:15+08:00">2021-12-21</time>
+              <time title="Created: 2021-12-22 18:10:05" itemprop="dateCreated datePublished" datetime="2021-12-22T18:10:05+08:00">2021-12-22</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-26 18:08:54" itemprop="dateModified" datetime="2021-12-26T18:08:54+08:00">2021-12-26</time>
+                <time title="Modified: 2021-12-26 18:11:28" itemprop="dateModified" datetime="2021-12-26T18:11:28+08:00">2021-12-26</time>
               </span>
 
           
@@ -201,154 +201,35 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="vSOMEIP-01-source-code"><a href="#vSOMEIP-01-source-code" class="headerlink" title="vSOMEIP 01:  source code"></a>vSOMEIP 01:  source code</h1><p>source code reading</p>
-<h2 id="Start-from-CMakeLists-txt"><a href="#Start-from-CMakeLists-txt" class="headerlink" title="Start from CMakeLists.txt"></a>Start from CMakeLists.txt</h2><h3 id="Dependencies"><a href="#Dependencies" class="headerlink" title="Dependencies"></a>Dependencies</h3><ul>
-<li>C++11, gcc &gt; 5.2</li>
-<li>Boost &gt; 1.55</li>
-</ul>
-<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h3><h4 id="DCMAKE-INSTALL-PREFIX"><a href="#DCMAKE-INSTALL-PREFIX" class="headerlink" title="DCMAKE_INSTALL_PREFIX"></a>DCMAKE_INSTALL_PREFIX</h4><p>安装位置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DCMAKE_INSTALL_PREFIX:PATH=<span class="variable">$YOUR_PATH</span> ..</span><br></pre></td></tr></table></figure>
-
-<h4 id="DBASE-PATH"><a href="#DBASE-PATH" class="headerlink" title="DBASE_PATH"></a>DBASE_PATH</h4><p>创建local sockets 位置, 默认为 <code>/tmp/vsomeip*</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DBASE_PATH=&lt;YOUR BASE PATH&gt; ..</span><br></pre></td></tr></table></figure>
-
-<h4 id="DUNICAST-ADDRESS"><a href="#DUNICAST-ADDRESS" class="headerlink" title="DUNICAST_ADDRESS"></a>DUNICAST_ADDRESS</h4><p>组播 address</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DUNICAST_ADDRESS=&lt;YOUR IP ADDRESS&gt; ..</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="DDIAGNOSIS-ADDRESS"><a href="#DDIAGNOSIS-ADDRESS" class="headerlink" title="DDIAGNOSIS_ADDRESS"></a>DDIAGNOSIS_ADDRESS</h4><p>诊断 address</p>
-<p>默认为<code>0x01</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DDIAGNOSIS_ADDRESS=&lt;YOUR DIAGNOSIS ADDRESS&gt; ..</span><br></pre></td></tr></table></figure>
-
-<h4 id="DDEFAULT-CONFIGURATION-FOLDER"><a href="#DDEFAULT-CONFIGURATION-FOLDER" class="headerlink" title="DDEFAULT_CONFIGURATION_FOLDER"></a>DDEFAULT_CONFIGURATION_FOLDER</h4><p>配置文件目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DDEFAULT_CONFIGURATION_FOLDER=&lt;DEFAULT CONFIGURATION FOLDER&gt; ..</span><br></pre></td></tr></table></figure>
-
-<p>默认为 <code>/etc/vsomeip</code></p>
-<h4 id="DDEFAULT-CONFIGURATION-FILE"><a href="#DDEFAULT-CONFIGURATION-FILE" class="headerlink" title="DDEFAULT_CONFIGURATION_FILE"></a>DDEFAULT_CONFIGURATION_FILE</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DDEFAULT_CONFIGURATION_FILE=&lt;DEFAULT CONFIGURATION FILE&gt; ..</span><br></pre></td></tr></table></figure>
-
-<p>默认为 <code>/etc/vsomeip.json</code></p>
-<h4 id="DENABLE-SIGNAL-HANDLING"><a href="#DENABLE-SIGNAL-HANDLING" class="headerlink" title="DENABLE_SIGNAL_HANDLING"></a>DENABLE_SIGNAL_HANDLING</h4><p>开启 signal handling</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DENABLE_SIGNAL_HANDLING=1 ..</span><br></pre></td></tr></table></figure>
-
-<h4 id="DROUTING-READY-MESSAGE"><a href="#DROUTING-READY-MESSAGE" class="headerlink" title="DROUTING_READY_MESSAGE"></a>DROUTING_READY_MESSAGE</h4><p>自定义 完成 ip routing 后的通知消息</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DROUTING_READY_MESSAGE=&lt;YOUR MESSAGE&gt; ..</span><br></pre></td></tr></table></figure>
-
-<h4 id="VSOMEIP-APPLICATION-NAME"><a href="#VSOMEIP-APPLICATION-NAME" class="headerlink" title="VSOMEIP_APPLICATION_NAME"></a>VSOMEIP_APPLICATION_NAME</h4><p>通过环境变量 定义启动的程序名字</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> VSOMEIP_APPLICATION_NAME=my_vsomeip_client \</span><br><span class="line"><span class="built_in">export</span> VSOMEIP_CONFIGURATION=my_settings.json \</span><br><span class="line">./my_vsomeip_application</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="json-配置"><a href="#json-配置" class="headerlink" title="json 配置"></a>json 配置</h4><ul>
-<li><p>unicast</p>
-<p>  The IP address of the host system.</p>
-</li>
-<li><p>netmask</p>
-<p>  The netmask to specify the subnet of the host system.</p>
-</li>
-<li><p>device</p>
-<p>  If specified, IP endpoints will be bound to this device.</p>
-</li>
-</ul>
+          <h2 id="vector-autosar-someip与vsomeip对接经验总结"><a href="#vector-autosar-someip与vsomeip对接经验总结" class="headerlink" title="vector autosar someip与vsomeip对接经验总结"></a>vector autosar someip与vsomeip对接经验总结</h2><p>someip是现代车辆通信的主流通信协议知一</p>
+<p>虽然someip协议已经基本成熟，但有多个实现版本，现在使用较多的主要有</p>
 <ul>
-<li><p>diagnosis</p>
-<p>  The diagnosis address (byte) that will be used to build client identifiers. The<br>  diagnosis address is assigned to the most significant byte in all client<br>  identifiers if not specified otherwise (for example through a predefined client<br>  ID).</p>
-</li>
-<li><p>diagnosis_mask</p>
-<p>  The diagnosis mask (2 byte) is used to control the maximum amount of allowed<br>  concurrent vsomeip clients on an ECU and the start value of the client IDs.</p>
-<p>  The default value is <code>0xFF00</code> meaning the most significant byte of the client ID<br>  is reserved for the diagnosis address and<br>  the client IDs will start with the diagnosis address as specified.</p>
-<p>  The maximum number of clients is 255 as the Hamming weight of the inverted mask<br>  is 8 (2^8 = 256 - 1 (for the routing manager) = 255). The resulting client ID<br>  range with a diagnosis address of for example 0x45 would be 0x4501 to 0x45ff.</p>
-</li>
-<li><p>network</p>
-<p>  Network identifier used to support multiple routing managers on one host. This<br>  setting changes the name of the shared memory segment in <code>/dev/shm</code> and the name<br>  of the unix domain sockets in <code>/tmp/</code>. Defaults to <code>vsomeip</code> meaning the shared<br>  memory will be named <code>/dev/shm/vsomeip</code> and the unix domain sockets will be<br>  named <code>/tmp/vsomeip-$CLIENTID</code></p>
-</li>
-<li><p><strong>logging</strong></p>
-</li>
-<li><p>level</p>
-<ul>
-<li>trace</li>
-<li>debug</li>
-<li>info</li>
-<li>warning</li>
-<li>error</li>
-<li>fatal</li>
+<li>vector autosar 的someip版本</li>
+<li>vsomeip；</li>
 </ul>
-<p>  6个等级</p>
-</li>
-</ul>
-<ul>
-<li><p>console</p>
-<ul>
-<li>true</li>
-<li>false</li>
-</ul>
-<p>  log 输出到console的开启/关闭</p>
-</li>
-<li><p>file</p>
-<ul>
-<li>enable<ul>
-<li>true</li>
-<li>false</li>
-</ul>
-</li>
-<li>path</li>
-</ul>
-<p>  log 输出到console的开启/关闭<br>  path: The absolute path of the log file</p>
-</li>
-<li><p>memory_log_interval<br>  Configures interval in seconds in which the routing manager logs its used<br>  memory. Setting a value greater than zero enables the logging.</p>
-</li>
-<li><p>status_log_interval<br>  Configures interval in seconds in which the routing manager logs its internal<br>  status.<br>  Setting a value greater than zero enables the logging.</p>
-</li>
-</ul>
-<ul>
-<li><p><strong>Tracing</strong></p>
-<ul>
-<li><p>enable</p>
-</li>
-<li><p>sd_enable</p>
-</li>
-<li><p>channels</p>
-<ul>
-<li>name</li>
-<li>id</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>Applications</strong></p>
-<ul>
-<li>name</li>
-<li>id</li>
-<li>max_dispatchers</li>
-<li>max_dispatch_time</li>
-<li>threads</li>
-<li>io_thread_nice</li>
-<li>request_debounce_time</li>
-</ul>
-</li>
-</ul>
-<h3 id="Source-Code-Arch"><a href="#Source-Code-Arch" class="headerlink" title="Source Code Arch"></a>Source Code Arch</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">├── config</span><br><span class="line">├── documentation</span><br><span class="line">├── examples</span><br><span class="line">│   ├── hello_world</span><br><span class="line">│   └── routingmanagerd</span><br><span class="line">├── implementation ---&gt; 具体的代码实现逻辑</span><br><span class="line">│   ├── compat     ---&gt; vSOMEIP 兼容</span><br><span class="line">│   │   ├── message</span><br><span class="line">│   │   │   ├── include</span><br><span class="line">│   │   │   └── src</span><br><span class="line">│   │   └── runtime</span><br><span class="line">│   │       ├── include</span><br><span class="line">│   │       └── src</span><br><span class="line">│   ├── configuration   ---&gt; 配置</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── e2e_protection</span><br><span class="line">│   ├── endpoints       ---&gt; 具有vSOMEIP功能的进程</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── helper          ---&gt; boost版本兼容</span><br><span class="line">│   │   ├── 1.55</span><br><span class="line">│   │   ├── 1.66</span><br><span class="line">│   │   ├── 1.70</span><br><span class="line">│   │   └── 1.74</span><br><span class="line">│   ├── logger</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── message</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── plugin</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── routing      ---&gt; 每个系统中只能有一个vSomeIP服务被配置成Routing</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── runtime       ---&gt; 管理公共资源和获取runtime属性</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── security</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── service_discovery</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── tracing</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   └── utility</span><br><span class="line">│       ├── include</span><br><span class="line">│       └── src</span><br><span class="line">├── interface</span><br><span class="line">│   ├── compat</span><br><span class="line">│   │   └── vsomeip</span><br><span class="line">│   │       ├── internal</span><br><span class="line">│   │       └── plugins</span><br><span class="line">│   └── vsomeip</span><br><span class="line">│       ├── internal</span><br><span class="line">│       └── plugins</span><br><span class="line">├── <span class="built_in">test</span></span><br><span class="line">└── tools</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>Configuration lib</p>
-<ul>
-<li>implementation<ul>
-<li>configuration</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>Base (Core) lib</p>
-<ul>
-<li>implementation<ul>
-<li><strong>endpoingts</strong></li>
-<li><strong>message</strong></li>
-<li><strong>routing</strong></li>
-<li><strong>runtime</strong></li>
-<li><strong>service_discovery</strong></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+<p>这两个版本在理论上是可以相互兼容正常通信的，但在实际使用过程中，仍然发现了一些问题；</p>
+<h3 id="在同一个局域网内，两方无法相互发现；"><a href="#在同一个局域网内，两方无法相互发现；" class="headerlink" title="在同一个局域网内，两方无法相互发现；"></a>在同一个局域网内，两方无法相互发现；</h3><p>原理：运行的someip应用需要借助于各自的someipd服务来彼此发现对方；</p>
+<p>而someipsd实现的someip sd协议是借助于udp的广播来发布或收集网络中的其他someip应用的相关信息的；</p>
+<p>所以要想两方能够彼此发现，首先要将someip sd的服务设置为同一广播地址以及服务端口号；</p>
+<p>这个信息可以在vsomeip程序加载的vsomeip-tcp-server.jason等配置文件中进行修改；</p>
+<p>理想情况下，将两方的配置修改成一样就可以正常发现彼此；</p>
+<h3 id="将someip-sd的广播地址以及服务端口号配置成一样，双方仍然是无法发现彼此；"><a href="#将someip-sd的广播地址以及服务端口号配置成一样，双方仍然是无法发现彼此；" class="headerlink" title="将someip sd的广播地址以及服务端口号配置成一样，双方仍然是无法发现彼此；"></a>将someip sd的广播地址以及服务端口号配置成一样，双方仍然是无法发现彼此；</h3><p>这个首先要借助网络工具来抓包进行确认，是否可以在网络上抓取到相应的udp数据包，来检查是不是由于网络设置的原因造成的；</p>
+<p>如果抓包工具可以确认在网络上有影响的udp广播包；</p>
+<p>那么就要对someip的版本号配置进行确认；</p>
+<p>在使用vsomeip 2.10版本时发现，vsomeip 代码中的默认主版本号信息为0x00;而vector autasar的someip版本号信息不特意更改的话是0x01;</p>
+<p>由于双方版本号不一致，虽然彼此可以收到对方发出的sd udp广播包，但在软件中彼此仍然无法相互识别。并且在vsomeip中会频繁输出warning信息；</p>
+<p>将双方的版本号信息设置为一致时，就相互就可以识别了；</p>
+<h3 id="sd-广播地址服务端口号以及版本号都配置成一致；但彼此仍然无法发现；"><a href="#sd-广播地址服务端口号以及版本号都配置成一致；但彼此仍然无法发现；" class="headerlink" title="sd 广播地址服务端口号以及版本号都配置成一致；但彼此仍然无法发现；"></a>sd 广播地址服务端口号以及版本号都配置成一致；但彼此仍然无法发现；</h3><p>这个就需要排查网络设置问题；</p>
+<p>(1)双方是否可以彼此ping通；</p>
+<p>(2)路由表以及gateway是否配置正确；</p>
+<p>我就遇到双方可以ping通，但由于路由表以及gateway信息缺失使得双方无法彼此发现的问题；</p>
+<h3 id="双方可以彼此发现，但客户端一订阅或者发送request底层tcp链接就断开的情况；"><a href="#双方可以彼此发现，但客户端一订阅或者发送request底层tcp链接就断开的情况；" class="headerlink" title="双方可以彼此发现，但客户端一订阅或者发送request底层tcp链接就断开的情况；"></a>双方可以彼此发现，但客户端一订阅或者发送request底层tcp链接就断开的情况；</h3><p>这个问题，也是由于服务版本号的问题（interface version）;</p>
+<p>由于某些特殊的原因，将autosar someip的主版本号设置为255可以与vsomeip 的0版本号相互发现；</p>
+<p>但是当进行交互时，在代码中会对interface version配置进行验证。如果双方的interface version不一致，那么就会出现一通信底层tcp的链接就会断开情况；</p>
+<p>这个需要注意检查；</p>
+<h3 id="当vsomeip作为服务器-autosar-someip作为客户端。vsomeip发送的event-autosar-someip的客户端无法接收到的情况；"><a href="#当vsomeip作为服务器-autosar-someip作为客户端。vsomeip发送的event-autosar-someip的客户端无法接收到的情况；" class="headerlink" title="当vsomeip作为服务器,autosar someip作为客户端。vsomeip发送的event,autosar someip的客户端无法接收到的情况；"></a>当vsomeip作为服务器,autosar someip作为客户端。vsomeip发送的event,autosar someip的客户端无法接收到的情况；</h3><p>首先要对someip传输类型进行确认（使用的是tcp或者udp）;</p>
+<p>假如使用tcp进行传输；则需要将vsomeip 配置文件中event配置添加is_reliable为true的字段；</p>
+<p>否则autasar someip tcp的客户端无法正常接收；</p>
 
       
     </div>
@@ -367,7 +248,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -432,7 +313,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -445,7 +326,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -482,6 +363,26 @@
   </div>
 
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 
