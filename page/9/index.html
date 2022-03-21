@@ -156,7 +156,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://4soos.github.io/2021/12/20/someip-00%EF%BC%9A-vsomeip/">
+    <link itemprop="mainEntityOfPage" href="https://4soos.github.io/2021/12/21/someip-01-code/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -170,7 +170,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/12/20/someip-00%EF%BC%9A-vsomeip/" class="post-title-link" itemprop="url">someip 00： vsomeip</a>
+            <a href="/2021/12/21/someip-01-code/" class="post-title-link" itemprop="url">someip-01: code</a>
         </h2>
 
         <div class="post-meta">
@@ -180,14 +180,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-12-20 17:58:18" itemprop="dateCreated datePublished" datetime="2021-12-20T17:58:18+08:00">2021-12-20</time>
+              <time title="Created: 2021-12-21 18:07:15" itemprop="dateCreated datePublished" datetime="2021-12-21T18:07:15+08:00">2021-12-21</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-12-26 18:04:57" itemprop="dateModified" datetime="2021-12-26T18:04:57+08:00">2021-12-26</time>
+                <time title="Modified: 2021-12-26 18:08:54" itemprop="dateModified" datetime="2021-12-26T18:08:54+08:00">2021-12-26</time>
               </span>
 
           
@@ -201,77 +201,154 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="vSOMEIP-00-quick-review"><a href="#vSOMEIP-00-quick-review" class="headerlink" title="vSOMEIP 00 :  quick review"></a>vSOMEIP 00 :  quick review</h1><ul>
-<li>refrence: <a target="_blank" rel="noopener" href="https://blog.zeerd.com/vsomeip-1st/">https://blog.zeerd.com/vsomeip-1st/</a></li>
+          <h1 id="vSOMEIP-01-source-code"><a href="#vSOMEIP-01-source-code" class="headerlink" title="vSOMEIP 01:  source code"></a>vSOMEIP 01:  source code</h1><p>source code reading</p>
+<h2 id="Start-from-CMakeLists-txt"><a href="#Start-from-CMakeLists-txt" class="headerlink" title="Start from CMakeLists.txt"></a>Start from CMakeLists.txt</h2><h3 id="Dependencies"><a href="#Dependencies" class="headerlink" title="Dependencies"></a>Dependencies</h3><ul>
+<li>C++11, gcc &gt; 5.2</li>
+<li>Boost &gt; 1.55</li>
 </ul>
-<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>vsomeip 是GENIVI项目中的一个SOME/IP开源实现，基于Mozilla Public Liense v2.0协议开源，由BMW贡献。</p>
-<p>vsomeip提供了两个动态库：</p>
-<ul>
-<li>SOME/IP协议的实现库libvsomeip.so</li>
-<li>用于服务发现的库libvsomeip-sd.so。</li>
-</ul>
-<p>vsomeip除了支持设备之间的SOME/IP通讯，也支持设备本地的进程间通讯，本地通讯通过unix socket完成。<br>vsomeip的实现基于boost.asio的异步IO库。<br>vsomeip应用通过一个Routing Manager与其他设备进行通讯: Routing Manager统一负责服务发现以及外部通讯socket的管理。<br>一个设备上的多个vsomeip应用共用一个Routing Manager，默认第一个启动的vsomeip应用负责启动Routing Manager，<br>也可以通过配置指定，其他应用通过proxy与Routing Manage进行通讯。</p>
-<p>vsomeip应用可以通过json文件来进行配置，配置项包含自身IP，应用名字，负责启动Routing Manager的应用，应用日志，服务发现的广播地址，广播间隔等。</p>
-<h2 id="Code-Block"><a href="#Code-Block" class="headerlink" title="Code Block"></a>Code Block</h2><p>vSomeIP的代码主要分成如下四大部分</p>
-<ul>
-<li><p>daemon</p>
-</li>
-<li><p>implementation</p>
-</li>
-<li><p>interface</p>
-<ul>
-<li>runtime</li>
-<li>application</li>
-<li>messgae</li>
-<li>payload</li>
-</ul>
-</li>
-<li><p>tool &amp; examples</p>
-</li>
-</ul>
-<h3 id="Interface"><a href="#Interface" class="headerlink" title="Interface"></a>Interface</h3><h4 id="Runtime"><a href="#Runtime" class="headerlink" title="Runtime"></a>Runtime</h4><p>这个类用于管理（主要是创建）其他所有公共资源和获取runtime属性。公共资源包括:</p>
-<ul>
-<li>application</li>
-<li>message</li>
-<li>request</li>
-<li>reponse</li>
-<li>notification</li>
-<li>payload</li>
-</ul>
-<h4 id="Application"><a href="#Application" class="headerlink" title="Application"></a>Application</h4><p>这是最核心的一个部分。它在每个客户端都存在且仅存在一份。<br>Application可以通过Runtime的接口来实例化。<br>管理着vSomeIP客户端的生命周期和生命周期内的所有通讯。</p>
-<h5 id="Plugin"><a href="#Plugin" class="headerlink" title="Plugin"></a>Plugin</h5><p>vSomeIP允许Application加载一到多个Plugin。<br>当Application的状态发生变化时，这个变化会被通知到Plugin。<br>在通知的时候会附带Application的名称。用于Plugin进行区别对待。</p>
-<p>Application的状态有三种，分别为：</p>
-<ul>
-<li>Initialized</li>
-<li>Started</li>
-<li>Stopped</li>
-</ul>
-<h4 id="Message"><a href="#Message" class="headerlink" title="Message"></a>Message</h4><p>无论是Request、Response还是Notification，本质上都是一种Message。</p>
-<p>从某种意义上来说，Message可以去分成两类，分别是通用Message和服务发现相关的Message。</p>
-<p>Message类提供了编串和解串功能，用于进行数据通讯，本质上他封装了SOME/IP的消息头。<br>所以，它还提供了一些列方法来设置或者读取详细的消息头信息。<br>这一点可以参考SOME/IP的 协议 文档。</p>
-<h4 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a>Payload</h4><p>Message的主体。也就是排除消息头之后剩下的部分。</p>
-<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h2><p>针对Interface的实装。 </p>
-<h3 id="Endpoints"><a href="#Endpoints" class="headerlink" title="Endpoints"></a>Endpoints</h3><p>每个具有vSomeIP功能的进程都是一个Endpoint。<br>Endpoint分成分成六大类：</p>
-<ul>
-<li>local-client</li>
-<li>udp-client</li>
-<li>tcp-client</li>
-<li>local-server</li>
-<li>udp-server</li>
-<li>tcp-server</li>
-</ul>
-<h3 id="Service-Discovery"><a href="#Service-Discovery" class="headerlink" title="Service Discovery"></a>Service Discovery</h3><h4 id="init"><a href="#init" class="headerlink" title="init"></a>init</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph TD;</span><br><span class="line">    service_discovery_impl == init -.- </span><br><span class="line">    parse_confguration -.-&gt;</span><br><span class="line">    service_discovery_imple;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h3><h4 id="DCMAKE-INSTALL-PREFIX"><a href="#DCMAKE-INSTALL-PREFIX" class="headerlink" title="DCMAKE_INSTALL_PREFIX"></a>DCMAKE_INSTALL_PREFIX</h4><p>安装位置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DCMAKE_INSTALL_PREFIX:PATH=<span class="variable">$YOUR_PATH</span> ..</span><br></pre></td></tr></table></figure>
 
-<h4 id="start"><a href="#start" class="headerlink" title="start"></a>start</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">graph TD;</span><br><span class="line"></span><br><span class="line">service_discovery_impl</span><br><span class="line"> == start </span><br><span class="line"> -.-&gt; create_service_discovery_endpoint </span><br><span class="line"> -.-&gt; create_server_endpoint </span><br><span class="line"> == join_sd_multicast</span><br><span class="line">--&gt; endpoint</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="DBASE-PATH"><a href="#DBASE-PATH" class="headerlink" title="DBASE_PATH"></a>DBASE_PATH</h4><p>创建local sockets 位置, 默认为 <code>/tmp/vsomeip*</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DBASE_PATH=&lt;YOUR BASE PATH&gt; ..</span><br></pre></td></tr></table></figure>
 
-<h3 id="Routing"><a href="#Routing" class="headerlink" title="Routing"></a>Routing</h3><p>每个系统中只能有一个vSomeIP服务被配置成Routing。</p>
-<p>如果没有特别的设定，那么系统中被运行的第一个具备vSomeIP功能的程序会被作为Routing Manager。</p>
-<h4 id="Init"><a href="#Init" class="headerlink" title="Init"></a>Init</h4><p><img src="../imgs/vsomeip_source_routing_init.png"></p>
-<h4 id="Start"><a href="#Start" class="headerlink" title="Start"></a>Start</h4><p><img src="../imgs/vsomeip_source_routing_start.png"></p>
-<h2 id="Daemon"><a href="#Daemon" class="headerlink" title="Daemon"></a>Daemon</h2><p>daemon的主体就是一个vsomeip::application</p>
-<p><img src="../imgs/vsomeip_source_daemon.png"></p>
-<p>Application创建了一个routing_manager_impl的实例。<br>如果这不是Daemon，而是一个通常的Application，那么他会转而创建routing_manager_proxy的实例，并与找到的Routing Manager建立连接。</p>
-<h2 id="Tools-amp-Examples"><a href="#Tools-amp-Examples" class="headerlink" title="Tools &amp; Examples"></a>Tools &amp; Examples</h2><p>一些简易的Application。用于进行一些消息发送接收的测试工作。</p>
+<h4 id="DUNICAST-ADDRESS"><a href="#DUNICAST-ADDRESS" class="headerlink" title="DUNICAST_ADDRESS"></a>DUNICAST_ADDRESS</h4><p>组播 address</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DUNICAST_ADDRESS=&lt;YOUR IP ADDRESS&gt; ..</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="DDIAGNOSIS-ADDRESS"><a href="#DDIAGNOSIS-ADDRESS" class="headerlink" title="DDIAGNOSIS_ADDRESS"></a>DDIAGNOSIS_ADDRESS</h4><p>诊断 address</p>
+<p>默认为<code>0x01</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DDIAGNOSIS_ADDRESS=&lt;YOUR DIAGNOSIS ADDRESS&gt; ..</span><br></pre></td></tr></table></figure>
+
+<h4 id="DDEFAULT-CONFIGURATION-FOLDER"><a href="#DDEFAULT-CONFIGURATION-FOLDER" class="headerlink" title="DDEFAULT_CONFIGURATION_FOLDER"></a>DDEFAULT_CONFIGURATION_FOLDER</h4><p>配置文件目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DDEFAULT_CONFIGURATION_FOLDER=&lt;DEFAULT CONFIGURATION FOLDER&gt; ..</span><br></pre></td></tr></table></figure>
+
+<p>默认为 <code>/etc/vsomeip</code></p>
+<h4 id="DDEFAULT-CONFIGURATION-FILE"><a href="#DDEFAULT-CONFIGURATION-FILE" class="headerlink" title="DDEFAULT_CONFIGURATION_FILE"></a>DDEFAULT_CONFIGURATION_FILE</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DDEFAULT_CONFIGURATION_FILE=&lt;DEFAULT CONFIGURATION FILE&gt; ..</span><br></pre></td></tr></table></figure>
+
+<p>默认为 <code>/etc/vsomeip.json</code></p>
+<h4 id="DENABLE-SIGNAL-HANDLING"><a href="#DENABLE-SIGNAL-HANDLING" class="headerlink" title="DENABLE_SIGNAL_HANDLING"></a>DENABLE_SIGNAL_HANDLING</h4><p>开启 signal handling</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DENABLE_SIGNAL_HANDLING=1 ..</span><br></pre></td></tr></table></figure>
+
+<h4 id="DROUTING-READY-MESSAGE"><a href="#DROUTING-READY-MESSAGE" class="headerlink" title="DROUTING_READY_MESSAGE"></a>DROUTING_READY_MESSAGE</h4><p>自定义 完成 ip routing 后的通知消息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DROUTING_READY_MESSAGE=&lt;YOUR MESSAGE&gt; ..</span><br></pre></td></tr></table></figure>
+
+<h4 id="VSOMEIP-APPLICATION-NAME"><a href="#VSOMEIP-APPLICATION-NAME" class="headerlink" title="VSOMEIP_APPLICATION_NAME"></a>VSOMEIP_APPLICATION_NAME</h4><p>通过环境变量 定义启动的程序名字</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> VSOMEIP_APPLICATION_NAME=my_vsomeip_client \</span><br><span class="line"><span class="built_in">export</span> VSOMEIP_CONFIGURATION=my_settings.json \</span><br><span class="line">./my_vsomeip_application</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="json-配置"><a href="#json-配置" class="headerlink" title="json 配置"></a>json 配置</h4><ul>
+<li><p>unicast</p>
+<p>  The IP address of the host system.</p>
+</li>
+<li><p>netmask</p>
+<p>  The netmask to specify the subnet of the host system.</p>
+</li>
+<li><p>device</p>
+<p>  If specified, IP endpoints will be bound to this device.</p>
+</li>
+</ul>
+<ul>
+<li><p>diagnosis</p>
+<p>  The diagnosis address (byte) that will be used to build client identifiers. The<br>  diagnosis address is assigned to the most significant byte in all client<br>  identifiers if not specified otherwise (for example through a predefined client<br>  ID).</p>
+</li>
+<li><p>diagnosis_mask</p>
+<p>  The diagnosis mask (2 byte) is used to control the maximum amount of allowed<br>  concurrent vsomeip clients on an ECU and the start value of the client IDs.</p>
+<p>  The default value is <code>0xFF00</code> meaning the most significant byte of the client ID<br>  is reserved for the diagnosis address and<br>  the client IDs will start with the diagnosis address as specified.</p>
+<p>  The maximum number of clients is 255 as the Hamming weight of the inverted mask<br>  is 8 (2^8 = 256 - 1 (for the routing manager) = 255). The resulting client ID<br>  range with a diagnosis address of for example 0x45 would be 0x4501 to 0x45ff.</p>
+</li>
+<li><p>network</p>
+<p>  Network identifier used to support multiple routing managers on one host. This<br>  setting changes the name of the shared memory segment in <code>/dev/shm</code> and the name<br>  of the unix domain sockets in <code>/tmp/</code>. Defaults to <code>vsomeip</code> meaning the shared<br>  memory will be named <code>/dev/shm/vsomeip</code> and the unix domain sockets will be<br>  named <code>/tmp/vsomeip-$CLIENTID</code></p>
+</li>
+<li><p><strong>logging</strong></p>
+</li>
+<li><p>level</p>
+<ul>
+<li>trace</li>
+<li>debug</li>
+<li>info</li>
+<li>warning</li>
+<li>error</li>
+<li>fatal</li>
+</ul>
+<p>  6个等级</p>
+</li>
+</ul>
+<ul>
+<li><p>console</p>
+<ul>
+<li>true</li>
+<li>false</li>
+</ul>
+<p>  log 输出到console的开启/关闭</p>
+</li>
+<li><p>file</p>
+<ul>
+<li>enable<ul>
+<li>true</li>
+<li>false</li>
+</ul>
+</li>
+<li>path</li>
+</ul>
+<p>  log 输出到console的开启/关闭<br>  path: The absolute path of the log file</p>
+</li>
+<li><p>memory_log_interval<br>  Configures interval in seconds in which the routing manager logs its used<br>  memory. Setting a value greater than zero enables the logging.</p>
+</li>
+<li><p>status_log_interval<br>  Configures interval in seconds in which the routing manager logs its internal<br>  status.<br>  Setting a value greater than zero enables the logging.</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>Tracing</strong></p>
+<ul>
+<li><p>enable</p>
+</li>
+<li><p>sd_enable</p>
+</li>
+<li><p>channels</p>
+<ul>
+<li>name</li>
+<li>id</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Applications</strong></p>
+<ul>
+<li>name</li>
+<li>id</li>
+<li>max_dispatchers</li>
+<li>max_dispatch_time</li>
+<li>threads</li>
+<li>io_thread_nice</li>
+<li>request_debounce_time</li>
+</ul>
+</li>
+</ul>
+<h3 id="Source-Code-Arch"><a href="#Source-Code-Arch" class="headerlink" title="Source Code Arch"></a>Source Code Arch</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">├── config</span><br><span class="line">├── documentation</span><br><span class="line">├── examples</span><br><span class="line">│   ├── hello_world</span><br><span class="line">│   └── routingmanagerd</span><br><span class="line">├── implementation ---&gt; 具体的代码实现逻辑</span><br><span class="line">│   ├── compat     ---&gt; vSOMEIP 兼容</span><br><span class="line">│   │   ├── message</span><br><span class="line">│   │   │   ├── include</span><br><span class="line">│   │   │   └── src</span><br><span class="line">│   │   └── runtime</span><br><span class="line">│   │       ├── include</span><br><span class="line">│   │       └── src</span><br><span class="line">│   ├── configuration   ---&gt; 配置</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── e2e_protection</span><br><span class="line">│   ├── endpoints       ---&gt; 具有vSOMEIP功能的进程</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── helper          ---&gt; boost版本兼容</span><br><span class="line">│   │   ├── 1.55</span><br><span class="line">│   │   ├── 1.66</span><br><span class="line">│   │   ├── 1.70</span><br><span class="line">│   │   └── 1.74</span><br><span class="line">│   ├── logger</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── message</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── plugin</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── routing      ---&gt; 每个系统中只能有一个vSomeIP服务被配置成Routing</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── runtime       ---&gt; 管理公共资源和获取runtime属性</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── security</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── service_discovery</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   ├── tracing</span><br><span class="line">│   │   ├── include</span><br><span class="line">│   │   └── src</span><br><span class="line">│   └── utility</span><br><span class="line">│       ├── include</span><br><span class="line">│       └── src</span><br><span class="line">├── interface</span><br><span class="line">│   ├── compat</span><br><span class="line">│   │   └── vsomeip</span><br><span class="line">│   │       ├── internal</span><br><span class="line">│   │       └── plugins</span><br><span class="line">│   └── vsomeip</span><br><span class="line">│       ├── internal</span><br><span class="line">│       └── plugins</span><br><span class="line">├── <span class="built_in">test</span></span><br><span class="line">└── tools</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>Configuration lib</p>
+<ul>
+<li>implementation<ul>
+<li>configuration</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Base (Core) lib</p>
+<ul>
+<li>implementation<ul>
+<li><strong>endpoingts</strong></li>
+<li><strong>message</strong></li>
+<li><strong>routing</strong></li>
+<li><strong>runtime</strong></li>
+<li><strong>service_discovery</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
       
     </div>
@@ -290,7 +367,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -355,7 +432,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -368,7 +445,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">24</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

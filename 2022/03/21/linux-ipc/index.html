@@ -20,30 +20,33 @@
     var CONFIG = {"hostname":"4soos.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="C&#x2F;CPP, Linux, Notes">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Young&#39;s Blog">
-<meta property="og:url" content="https://4soos.github.io/index.html">
+  <meta name="description" content="进程间通信： IPC key: processes , communication   进程是一个独立的资源分配单元:  不同进程（这里所说的进程通常指的是用户进程）之间的资源是独立的，没有关联，不能在一个进程中直接访问另一个进程的资源,进程不是孤立的， 不同的进程需要进行信息的交互和状态的传递等，因此需要进程间通信( IPC：Inter Processes Communication )。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux_ipc">
+<meta property="og:url" content="https://4soos.github.io/2022/03/21/linux-ipc/index.html">
 <meta property="og:site_name" content="Young&#39;s Blog">
-<meta property="og:description" content="C&#x2F;CPP, Linux, Notes">
+<meta property="og:description" content="进程间通信： IPC key: processes , communication   进程是一个独立的资源分配单元:  不同进程（这里所说的进程通常指的是用户进程）之间的资源是独立的，没有关联，不能在一个进程中直接访问另一个进程的资源,进程不是孤立的， 不同的进程需要进行信息的交互和状态的传递等，因此需要进程间通信( IPC：Inter Processes Communication )。">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-03-21T15:41:11.000Z">
+<meta property="article:modified_time" content="2022-03-21T15:42:01.488Z">
 <meta property="article:author" content="Young">
+<meta property="article:tag" content="Linux, C">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://4soos.github.io/">
+<link rel="canonical" href="https://4soos.github.io/2022/03/21/linux-ipc/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Young's Blog</title>
+  <title>linux_ipc | Young's Blog</title>
   
 
 
@@ -150,9 +153,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
@@ -168,10 +172,9 @@
       <meta itemprop="name" content="Young's Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/21/linux-ipc/" class="post-title-link" itemprop="url">linux_ipc</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          linux_ipc
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -185,6 +188,13 @@
             </span>
 
           
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
 
         </div>
       </header>
@@ -195,7 +205,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="进程间通信：-IPC"><a href="#进程间通信：-IPC" class="headerlink" title="进程间通信： IPC"></a>进程间通信： IPC</h1><blockquote>
+        <h1 id="进程间通信：-IPC"><a href="#进程间通信：-IPC" class="headerlink" title="进程间通信： IPC"></a>进程间通信： IPC</h1><blockquote>
 <p>key: processes , communication</p>
 </blockquote>
 <ul>
@@ -530,25 +540,34 @@
 </ul>
 <h3 id="MAN-7-signal"><a href="#MAN-7-signal" class="headerlink" title="MAN 7 signal"></a>MAN 7 signal</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">Signal numbering <span class="keyword">for</span> standard signals</span><br><span class="line">      The numeric value <span class="keyword">for</span> each signal is given <span class="keyword">in</span> the table below.  As shown <span class="keyword">in</span> the table, many</span><br><span class="line">      signals  have different numeric values on different architectures.  The first numeric value</span><br><span class="line">      <span class="keyword">in</span> each table row shows the signal number on x86, ARM, and most  other  architectures;  the</span><br><span class="line">      second  value is <span class="keyword">for</span> Alpha and SPARC; the third is <span class="keyword">for</span> MIPS; and the last is <span class="keyword">for</span> PARISC.  A</span><br><span class="line">      dash (-) denotes that a signal is absent on the corresponding architecture.</span><br><span class="line"></span><br><span class="line">      Signal        x86/ARM     Alpha/   MIPS   PARISC   Notes</span><br><span class="line">                  most others   SPARC</span><br><span class="line">      ─────────────────────────────────────────────────────────────────</span><br><span class="line">      SIGHUP           1           1       1       1</span><br><span class="line">      SIGINT           2           2       2       2</span><br><span class="line">      SIGQUIT          3           3       3       3</span><br><span class="line">      SIGILL           4           4       4       4</span><br><span class="line">      SIGTRAP          5           5       5       5</span><br><span class="line">      SIGABRT          6           6       6       6</span><br><span class="line">      SIGIOT           6           6       6       6</span><br><span class="line">      SIGBUS           7          10      10      10</span><br><span class="line">      SIGEMT           -           7       7      -</span><br><span class="line">      SIGFPE           8           8       8       8</span><br><span class="line">      SIGKILL          9           9       9       9</span><br><span class="line">      SIGUSR1         10          30      16      16</span><br><span class="line">      SIGSEGV         11          11      11      11</span><br><span class="line">      SIGUSR2         12          31      17      17</span><br><span class="line">      SIGPIPE         13          13      13      13</span><br><span class="line">      SIGALRM         14          14      14      14</span><br><span class="line">      SIGTERM         15          15      15      15</span><br><span class="line">      SIGSTKFLT       16          -       -        7</span><br><span class="line">      SIGCHLD         17          20      18      18</span><br><span class="line">      SIGCLD           -          -       18      -</span><br><span class="line">      SIGCONT         18          19      25      26</span><br><span class="line">      SIGSTOP         19          17      23      24</span><br><span class="line">      SIGTSTP         20          18      24      25</span><br><span class="line">      SIGTTIN         21          21      26      27</span><br><span class="line">      SIGTTOU         22          22      27      28</span><br><span class="line">      SIGURG          23          16      21      29</span><br><span class="line">      SIGXCPU         24          24      30      12</span><br><span class="line">      SIGXFSZ         25          25      31      30</span><br><span class="line">      SIGVTALRM       26          26      28      20</span><br><span class="line">      SIGPROF         27          27      29      21</span><br><span class="line">      SIGWINCH        28          28      20      23</span><br><span class="line">      SIGIO           29          23      22      22</span><br><span class="line">      SIGPOLL                                            Same as SIGIO</span><br><span class="line">      SIGPWR          30         29/-     19      19</span><br><span class="line">      SIGINFO          -         29/-     -       -</span><br><span class="line">      SIGLOST          -         -/29     -       -</span><br><span class="line">      SIGSYS          31          12      12      31</span><br><span class="line">      SIGUNUSED       31          -       -       31</span><br><span class="line"></span><br><span class="line">Note the following:</span><br><span class="line"></span><br><span class="line">      *  Where defined, SIGUNUSED is synonymous with SIGSYS.  Since glibc 2.26, SIGUNUSED  is  no</span><br><span class="line">         longer defined on any architecture.</span><br><span class="line"></span><br><span class="line">      *  Signal 29 is SIGINFO/SIGPWR (synonyms <span class="keyword">for</span> the same value) on Alpha but SIGLOST on SPARC.</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          <div class="post-tags">
+              <a href="/tags/Linux-C/" rel="tag"># Linux, C</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/15/elf%E7%AE%80%E4%BB%8B/" rel="prev" title="elf简介">
+      <i class="fa fa-chevron-left"></i> elf简介
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
+    
   </article>
   
   
   
-
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
 
 
 
@@ -600,6 +619,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%EF%BC%9A-IPC"><span class="nav-number">1.</span> <span class="nav-text">进程间通信： IPC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E9%81%93"><span class="nav-number">1.1.</span> <span class="nav-text">管道</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E5%90%8D%E7%AE%A1%E9%81%93"><span class="nav-number">1.1.1.</span> <span class="nav-text">具名管道</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%89%E5%90%8D%E7%AE%A1%E9%81%93%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%EF%BC%9A"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">有名管道的注意事项：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.1.2.</span> <span class="nav-text">Linux 实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E7%9A%84%E8%AF%BB%E5%86%99%E7%89%B9%E7%82%B9%EF%BC%9A"><span class="nav-number">1.1.3.</span> <span class="nav-text">管道的读写特点：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84-Memory-Mapped"><span class="nav-number">1.2.</span> <span class="nav-text">内存映射 Memory-Mapped</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text">Linux 调用函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-amp-A"><span class="nav-number">1.2.2.</span> <span class="nav-text">Q&amp;A</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7"><span class="nav-number">1.3.</span> <span class="nav-text">信号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E7%9A%84-5-%E7%A7%8D%E9%BB%98%E8%AE%A4%E5%A4%84%E7%90%86%E5%8A%A8%E4%BD%9C"><span class="nav-number">1.3.1.</span> <span class="nav-text">信号的 5 种默认处理动作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E7%9B%B8%E5%85%B3%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.2.</span> <span class="nav-text">信号相关的函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%9B%86"><span class="nav-number">1.3.3.</span> <span class="nav-text">信号集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">相关函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MAN-7-signal"><span class="nav-number">1.3.4.</span> <span class="nav-text">MAN 7 signal</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
